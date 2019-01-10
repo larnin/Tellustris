@@ -84,7 +84,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Nicolas\Programation\c++\Nazara\Repo\NazaraEngine\include;C:\Users\Nicolas\Programation\c++\Nazara\Repo\NazaraEngine\SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Nicolas\Programation\c++\Nazara\Repo\NazaraEngine\include;C:\Users\Nicolas\Programation\c++\Nazara\Repo\NazaraEngine\SDK\include;C:\Users\Nicolas\Programation\c++\Projets\Tellustris\Tellustris\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -114,7 +114,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Nicolas\Programation\c++\Nazara\Repo\NazaraEngine\include;C:\Users\Nicolas\Programation\c++\Nazara\Repo\NazaraEngine\SDK\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Nicolas\Programation\c++\Nazara\Repo\NazaraEngine\include;C:\Users\Nicolas\Programation\c++\Nazara\Repo\NazaraEngine\SDK\include;C:\Users\Nicolas\Programation\c++\Projets\Tellustris\Tellustris\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -125,7 +125,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\Src\Animator\Animation.cpp" />
+    <ClCompile Include="..\Src\Animator\Animator.cpp" />
+    <ClCompile Include="..\Src\Components\AnimatorComponent.cpp" />
+    <ClCompile Include="..\Src\InitSystemsAndComponents.cpp" />
     <ClCompile Include="..\Src\main.cpp" />
+    <ClCompile Include="..\Src\Systems\AnimatorSystem.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Include\Animator\Animation.h" />
+    <ClInclude Include="..\Include\Animator\Animator.h" />
+    <ClInclude Include="..\Include\Components\AnimatorComponent.h" />
+    <ClInclude Include="..\Include\InitSystemsAndComponents.h" />
+    <ClInclude Include="..\Include\Systems\AnimatorSystem.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

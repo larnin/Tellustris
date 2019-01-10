@@ -1,9 +1,15 @@
+
+#include "InitSystemsAndComponents.h"
+
 #include <NDK/Application.hpp>
 #include <Nazara/Renderer.hpp>
 #include <iostream>
 
+
 int main()
 {
+	InitializeSystemsAndComponents();
+
 	Ndk::Application application;
 
 	Nz::RenderWindow& mainWindow = application.AddWindow<Nz::RenderWindow>();

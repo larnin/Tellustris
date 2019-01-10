@@ -13,10 +13,60 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\Systems">
+      <UniqueIdentifier>{e75966e0-eb84-4c2d-a2d3-f255a62fb084}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Systems">
+      <UniqueIdentifier>{375e87cc-ca62-4952-ab2c-31d9a56a387c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Components">
+      <UniqueIdentifier>{6cae0e50-3f05-4ec9-a159-561179e65129}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Components">
+      <UniqueIdentifier>{c5851653-ec4b-46bc-b4d1-96b9c3896a45}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Animator">
+      <UniqueIdentifier>{24c50dd2-1e3e-4d18-a9d9-64e0cb9c3234}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Animator">
+      <UniqueIdentifier>{cad48886-00eb-4b7b-9db7-57b07bd75632}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Src\main.cpp">
       <Filter>Fichiers sources</Filter>
     </ClCompile>
+    <ClCompile Include="..\Src\Systems\AnimatorSystem.cpp">
+      <Filter>Fichiers sources\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Components\AnimatorComponent.cpp">
+      <Filter>Fichiers sources\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\InitSystemsAndComponents.cpp">
+      <Filter>Fichiers sources</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Animator\Animation.cpp">
+      <Filter>Fichiers sources\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Animator\Animator.cpp">
+      <Filter>Fichiers sources\Animator</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\Include\Systems\AnimatorSystem.h">
+      <Filter>Fichiers d%27en-tête\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Components\AnimatorComponent.h">
+      <Filter>Fichiers d%27en-tête\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\InitSystemsAndComponents.h">
+      <Filter>Fichiers d%27en-tête</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Animator\Animation.h">
+      <Filter>Fichiers d%27en-tête\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Animator\Animator.h">
+      <Filter>Fichiers d%27en-tête\Animator</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
