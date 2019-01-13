@@ -34,6 +34,9 @@
     <Filter Include="Fichiers d%27en-tête\Utility">
       <UniqueIdentifier>{0c96276c-ff15-45d8-b589-c6b647f71e65}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\Utility\Expression">
+      <UniqueIdentifier>{155ba5f6-fd4d-4ac6-b492-a7ff25cf013f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Src\main.cpp">
@@ -74,5 +77,22 @@
     <ClInclude Include="..\Include\Utility\StaticRandomGenerator.h">
       <Filter>Fichiers d%27en-tête\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Utility\Expression\ExpressionValue.h">
+      <Filter>Fichiers d%27en-tête\Utility\Expression</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Utility\Expression\ExpressionParser.h">
+      <Filter>Fichiers d%27en-tête\Utility\Expression</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Utility\Expression\Expression.h">
+      <Filter>Fichiers d%27en-tête\Utility\Expression</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Utility\StringOperation.h">
+      <Filter>Fichiers d%27en-tête\Utility</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Include\Utility\Expression\ExpressionParser.inl">
+      <Filter>Fichiers d%27en-tête\Utility\Expression</Filter>
+    </None>
   </ItemGroup>
 </Project>
