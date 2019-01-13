@@ -138,6 +138,7 @@
     <ClInclude Include="..\Include\Components\AnimatorComponent.h" />
     <ClInclude Include="..\Include\InitSystemsAndComponents.h" />
     <ClInclude Include="..\Include\Systems\AnimatorSystem.h" />
+    <ClInclude Include="..\Include\Utility\StaticRandomGenerator.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -31,6 +31,9 @@
     <Filter Include="Fichiers d%27en-tête\Animator">
       <UniqueIdentifier>{cad48886-00eb-4b7b-9db7-57b07bd75632}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\Utility">
+      <UniqueIdentifier>{0c96276c-ff15-45d8-b589-c6b647f71e65}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Src\main.cpp">
@@ -67,6 +70,9 @@
     </ClInclude>
     <ClInclude Include="..\Include\Animator\Animator.h">
       <Filter>Fichiers d%27en-tête\Animator</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Utility\StaticRandomGenerator.h">
+      <Filter>Fichiers d%27en-tête\Utility</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
