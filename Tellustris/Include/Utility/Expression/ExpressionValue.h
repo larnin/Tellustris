@@ -8,6 +8,15 @@
 namespace NExpression
 {
 	template <typename T>
+	class IValue;
+
+	template <typename T>
+	using ValueRef = std::unique_ptr<IValue<T>>;
+
+	template <typename T>
+	class Expression;
+
+	template <typename T>
 	class IValue
 	{
 	public:
@@ -18,10 +27,11 @@ namespace NExpression
 
 		virtual T get() const = 0;
 		virtual std::string toString() const = 0;
-	};
 
-	template <typename T>
-	using ValueRef = std::unique_ptr<IValue<T>>;
+		virtual ValueRef<T> clone() const = 0;
+
+		virtual void registerParameter(Expression<T> & expression) = 0;
+	};
 
 	template <typename T>
 	class Number : public IValue<T>
@@ -43,6 +53,13 @@ namespace NExpression
 		{
 			return std::to_string(m_value);
 		}
+
+		ValueRef<T> clone() const override
+		{
+			return std::make_unique<Number<T>>(m_value);
+		}
+
+		void registerParameter(Expression<T> &) override {}
 
 	protected:
 		T m_value;
@@ -67,6 +84,18 @@ namespace NExpression
 		std::string toString() const override
 		{
 			return m_name;
+		}
+
+		ValueRef<T> clone() const override
+		{
+			auto v = std::make_unique<Parameter<T>>(m_name);
+			v->set(Number<T>::m_value);
+			return v;
+		}
+		
+		void registerParameter(Expression<T> & expression) override
+		{
+			expression.addParameter(this);
 		}
 
 	private:
@@ -106,6 +135,20 @@ namespace NExpression
 			return value + " )";
 		}
 
+		ValueRef<T> clone() const override
+		{
+			std::vector<ValueRef<T>> values;
+			for (const auto & v : m_values)
+				values.emplace_back(v->clone());
+			return std::make_unique<OperationSum<T>>(values.begin(), values.end());
+		}
+
+		void registerParameter(Expression<T> & expression) override
+		{
+			for (auto & v : m_values)
+				v->registerParameter(expression);
+		}
+
 	private:
 		std::vector<ValueRef<T>> m_values;
 	};
@@ -128,6 +171,16 @@ namespace NExpression
 		std::string toString() const override
 		{
 			return "( -" + m_value->toString() + " )";
+		}
+
+		ValueRef<T> clone() const override
+		{
+			return std::make_unique<OperationNegate<T>>(m_value->clone());
+		}
+
+		void registerParameter(Expression<T> & expression) override
+		{
+			m_value->registerParameter(expression);
 		}
 
 	private:
@@ -165,6 +218,20 @@ namespace NExpression
 					value += " * ";
 			}
 			return value + " )";
+		}
+
+		ValueRef<T> clone() const override
+		{
+			std::vector<ValueRef<T>> values;
+			for (const auto & v : m_values)
+				values.emplace_back(v->clone());
+			return std::make_unique<OperationProduct<T>>(values.begin(), values.end());
+		}
+
+		void registerParameter(Expression<T> & expression) override
+		{
+			for (auto & v : m_values)
+				v->registerParameter(expression);
 		}
 
 	private:
@@ -205,6 +272,20 @@ namespace NExpression
 			return value + " )";
 		}
 
+		ValueRef<T> clone() const override
+		{
+			std::vector<ValueRef<T>> values;
+			for (const auto & v : m_values)
+				values.emplace_back(v->clone());
+			return std::make_unique<OperationReciprocal<T>>(values.begin(), values.end());
+		}
+
+		void registerParameter(Expression<T> & expression) override
+		{
+			for (auto & v : m_values)
+				v->registerParameter(expression);
+		}
+
 	private:
 		std::vector<ValueRef<T>> m_values;
 	};
@@ -228,6 +309,17 @@ namespace NExpression
 		std::string toString() const override
 		{
 			return "( " + m_value->toString() + " ^ " + m_power->toString() + " )";
+		}
+
+		ValueRef<T> clone() const override
+		{
+			return std::make_unique<OperationPower<T>>(m_value->clone(), m_power->clone());
+		}
+
+		void registerParameter(Expression<T> & expression) override
+		{
+			m_value->registerParameter(expression);
+			m_power->registerParameter(expression);
 		}
 
 	private:
@@ -255,6 +347,13 @@ namespace NExpression
 		{
 			return std::to_string(m_value);
 		}
+
+		ValueRef<T> clone() const override
+		{
+			return std::make_unique<Constant<T>>(m_name, m_value);
+		}
+
+		void registerParameter(Expression<T> & expression) override {};
 
 	private:
 		std::string m_name;
@@ -301,6 +400,20 @@ namespace NExpression
 			return value + " )";
 		}
 
+		ValueRef<T> clone() const override
+		{
+			std::vector<ValueRef<T>> values;
+			for (const auto & v : m_values)
+				values.emplace_back(v->clone());
+			return std::make_unique<Function<T>>(m_functionName, m_function, values.begin(), values.end());
+		}
+
+		void registerParameter(Expression<T> & expression) override
+		{
+			for (auto & v : m_values)
+				v->registerParameter(expression);
+		}
+
 	private:
 		std::string m_functionName;
 		ExpressionFunction<T> m_function;
@@ -326,6 +439,17 @@ namespace NExpression
 		std::string toString() const override
 		{
 			return "( " + m_left->toString() + " > " + m_right->toString() + " )";
+		}
+
+		ValueRef<T> clone() const override
+		{
+			return std::make_unique<ComparisonSup<T>>(m_left->clone(), m_right->clone());
+		}
+
+		void registerParameter(Expression<T> & expression) override
+		{
+			m_left->registerParameter(expression);
+			m_right->registerParameter(expression);
 		}
 
 	private:
@@ -354,6 +478,17 @@ namespace NExpression
 			return "( " + m_left->toString() + " >= " + m_right->toString() + " )";
 		}
 
+		ValueRef<T> clone() const override
+		{
+			return std::make_unique<ComparisonSupOrEqual<T>>(m_left->clone(), m_right->clone());
+		}
+
+		void registerParameter(Expression<T> & expression) override
+		{
+			m_left->registerParameter(expression);
+			m_right->registerParameter(expression);
+		}
+
 	private:
 		ValueRef<T> m_left;
 		ValueRef<T> m_right;
@@ -378,6 +513,17 @@ namespace NExpression
 		std::string toString() const override
 		{
 			return "( " + m_left->toString() + " < " + m_right->toString() + " )";
+		}
+
+		ValueRef<T> clone() const override
+		{
+			return std::make_unique<ComparisonSub<T>>(m_left->clone(), m_right->clone());
+		}
+
+		void registerParameter(Expression<T> & expression) override
+		{
+			m_left->registerParameter(expression);
+			m_right->registerParameter(expression);
 		}
 
 	private:
@@ -406,6 +552,17 @@ namespace NExpression
 			return "( " + m_left->toString() + " <= " + m_right->toString() + " )";
 		}
 
+		ValueRef<T> clone() const override
+		{
+			return std::make_unique<ComparisonSubOrEqual<T>>(m_left->clone(), m_right->clone());
+		}
+
+		void registerParameter(Expression<T> & expression) override
+		{
+			m_left->registerParameter(expression);
+			m_right->registerParameter(expression);
+		}
+
 	private:
 		ValueRef<T> m_left;
 		ValueRef<T> m_right;
@@ -430,6 +587,17 @@ namespace NExpression
 		std::string toString() const override
 		{
 			return "( " + m_left->toString() + " = " + m_right->toString() + " )";
+		}
+
+		ValueRef<T> clone() const override
+		{
+			return std::make_unique<ComparisonEqual<T>>(m_left->clone(), m_right->clone());
+		}
+
+		void registerParameter(Expression<T> & expression) override
+		{
+			m_left->registerParameter(expression);
+			m_right->registerParameter(expression);
 		}
 
 	private:
@@ -458,6 +626,17 @@ namespace NExpression
 			return "( " + m_left->toString() + " != " + m_right->toString() + " )";
 		}
 
+		ValueRef<T> clone() const override
+		{
+			return std::make_unique<ComparisonUnequal<T>>(m_left->clone(), m_right->clone());
+		}
+
+		void registerParameter(Expression<T> & expression) override
+		{
+			m_left->registerParameter(expression);
+			m_right->registerParameter(expression);
+		}
+
 	private:
 		ValueRef<T> m_left;
 		ValueRef<T> m_right;
@@ -482,6 +661,17 @@ namespace NExpression
 		std::string toString() const override
 		{
 			return "( " + m_left->toString() + " || " + m_right->toString() + " )";
+		}
+
+		ValueRef<T> clone() const override
+		{
+			return std::make_unique<ConditionOr<T>>(m_left->clone(), m_right->clone());
+		}
+
+		void registerParameter(Expression<T> & expression) override
+		{
+			m_left->registerParameter(expression);
+			m_right->registerParameter(expression);
 		}
 
 	private:
@@ -510,6 +700,17 @@ namespace NExpression
 			return "( " + m_left->toString() + " && " + m_right->toString() + " )";
 		}
 
+		ValueRef<T> clone() const override
+		{
+			return std::make_unique<ConditionAnd<T>>(m_left->clone(), m_right->clone());
+		}
+
+		void registerParameter(Expression<T> & expression) override
+		{
+			m_left->registerParameter(expression);
+			m_right->registerParameter(expression);
+		}
+
 	private:
 		ValueRef<T> m_left;
 		ValueRef<T> m_right;
@@ -534,6 +735,16 @@ namespace NExpression
 		std::string toString() const override
 		{
 			return "( ! " + m_value->toString() + " )";
+		}
+
+		ValueRef<T> clone() const override
+		{
+			return std::make_unique<ConditionNot<T>>(m_value->clone());
+		}
+
+		void registerParameter(Expression<T> & expression) override
+		{
+			m_value->registerParameter(expression);
 		}
 
 	private:

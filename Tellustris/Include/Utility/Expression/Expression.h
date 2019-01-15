@@ -26,9 +26,34 @@ namespace NExpression
 	{
 	public:
 		friend class ExpressionParser<T>;
+		friend class Parameter<T>;
+
+		Expression() = default;
+		~Expression() = default;
+
+		Expression(const Expression<T> & expression)
+			: m_value(expression.m_value->clone())
+		{
+			m_value->registerParameter(*this);
+		}
+
+		Expression & operator=(const Expression<T> & expression)
+		{
+			m_value = expression.m_value->clone();
+
+			m_parameterNames.clear();
+			m_parameters.clear();
+
+			m_value->registerParameter(*this);
+
+			return *this;
+		}
+
 
 		T compute() const
 		{
+			if (!m_value)
+				return T(0);
 			return m_value->get();
 		}
 
@@ -67,12 +92,12 @@ namespace NExpression
 
 		std::string toString()
 		{
+			if (!m_value)
+				return "";
 			return m_value->toString();
 		}
 
 	private:
-		Expression() = default;
-
 		void addParameter(Parameter<T> * parameter)
 		{
 			auto index = nameIndex(parameter->name());
