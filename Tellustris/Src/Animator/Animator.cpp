@@ -1,8 +1,11 @@
 
 #include "Animator/Animator.h"
+#include "Utility/Expression/ExpressionParser.h"
 
 #include <algorithm>
 #include <cassert>
+
+using ConditionExpressionParser = NExpression::ExpressionParser<int>;
 
 unsigned int Animator::addAnimation(const std::string & name, AnimationRef anim, bool xFlipped, bool yFlipped)
 {
@@ -174,4 +177,161 @@ void Animator::setDefaultAnimation(unsigned int index)
 {
 	assert(animationExist(index));
 	m_defaultStateIndex = index;
+}
+
+unsigned int Animator::addTransition(const std::string & fromState, const std::string & toState, const std::string & condition)
+{
+	return addTransition(animationIndex(fromState), animationIndex(toState), condition);
+}
+
+unsigned int Animator::addTransition(const std::string & fromState, const std::string & toState, const ConditionExpression & expression)
+{
+	return addTransition(animationIndex(fromState), animationIndex(toState), expression);
+}
+
+unsigned int Animator::addTransition(unsigned int fromState, unsigned int toState, const std::string & condition)
+{
+	assert(!haveTransition(fromState, toState));
+	assert(animationExist(fromState));
+	assert(animationExist(toState));
+
+	ConditionExpressionParser parser;
+	m_transitions.push_back({ fromState, toState, condition, parser.evaluate(condition) });
+	m_states[fromState].transitionIndexs.push_back(static_cast<unsigned int>(m_transitions.size() - 1));
+	return static_cast<unsigned int>(m_transitions.size() - 1);
+}
+
+unsigned int Animator::addTransition(unsigned int fromState, unsigned int toState, const ConditionExpression & expression)
+{
+	assert(!haveTransition(fromState, toState));
+	assert(animationExist(fromState));
+	assert(animationExist(toState));
+
+	m_transitions.push_back({ fromState, toState, expression.toString(), expression });
+	m_states[fromState].transitionIndexs.push_back(static_cast<unsigned int>(m_transitions.size() - 1));
+	return static_cast<unsigned int>(m_transitions.size() - 1);
+}
+
+void Animator::removeTransition(const std::string & fromState, const std::string & toState)
+{
+	removeTransition(animationIndex(fromState), animationIndex(toState));
+}
+
+void Animator::removeTransition(unsigned int fromState, unsigned int toState)
+{
+	assert(haveTransition(fromState, toState));
+
+	auto index = getTransition(fromState, toState);
+	m_transitions.erase(m_transitions.begin() + index);
+	for (auto & s : m_states)
+	{
+		for (size_t i = 0; i < s.transitionIndexs.size(); i++)
+			if (s.transitionIndexs[i] > index)
+				s.transitionIndexs[i]--;
+	}
+}
+
+bool Animator::haveTransition(const std::string & fromState, const std::string & toState) const
+{
+	return haveTransition(animationIndex(fromState), animationIndex(toState));
+}
+
+bool Animator::haveTransition(unsigned int fromState, unsigned int toState) const
+{
+	auto it = std::find_if(m_transitions.begin(), m_transitions.end(), [fromState, toState](const auto & t) { return t.fromState == fromState && t.toState == toState; });
+
+	return it != m_transitions.end();
+}
+
+unsigned int Animator::getTransition(const std::string & fromState, const std::string & toState) const
+{
+	return getTransition(animationIndex(fromState), animationIndex(toState));
+}
+
+unsigned int Animator::getTransition(unsigned int fromState, unsigned int toState) const
+{
+	assert(haveTransition(fromState, toState));
+
+	auto it = std::find_if(m_transitions.begin(), m_transitions.end(), [fromState, toState](const auto & t) { return t.fromState == fromState && t.toState == toState; });
+
+	return static_cast<unsigned int>(std::distance(m_transitions.begin(), it));
+}
+
+unsigned int Animator::transitionsCount() const
+{
+	return static_cast<unsigned int>(m_transitions.size());
+}
+
+std::vector<unsigned int> Animator::outStateTransitionsIndexs(const std::string & state) const
+{
+	return outStateTransitionsIndexs(animationIndex(state));
+}
+
+std::vector<unsigned int> Animator::outStateTransitionsIndexs(unsigned int stateIndex) const
+{
+	assert(animationExist(stateIndex));
+
+	return m_states[stateIndex].transitionIndexs;
+}
+
+std::vector<unsigned int> Animator::inStateTransitionsIndexs(const std::string & state) const
+{
+	return inStateTransitionsIndexs(animationIndex(state));
+}
+
+std::vector<unsigned int> Animator::inStateTransitionsIndexs(unsigned int stateIndex) const
+{
+	assert(animationExist(stateIndex));
+
+	std::vector<unsigned int> indexs;
+	for (unsigned int i = 0; i < m_transitions.size(); i++)
+		if (m_transitions[i].toState == stateIndex)
+			indexs.push_back(i);
+
+	return indexs;
+}
+
+unsigned int Animator::transitionFromStateIndex(unsigned int index) const
+{
+	assert(index < m_transitions.size());
+
+	return m_transitions[index].fromState;
+}
+
+unsigned int Animator::transitionToStateIndex(unsigned int index) const
+{
+	assert(index < m_transitions.size());
+
+	return m_transitions[index].toState;
+}
+
+std::string Animator::transitionConditionString(unsigned int index) const
+{
+	assert(index < m_transitions.size());
+
+	return m_transitions[index].condition;
+}
+
+ConditionExpression Animator::transitionConditionExpression(unsigned int index) const
+{
+	assert(index < m_transitions.size());
+
+	return m_transitions[index].expression;
+}
+
+void Animator::setTransitionCondition(unsigned int index, const std::string & condition)
+{
+	assert(index < m_transitions.size());
+
+	m_transitions[index].condition = condition;
+	ConditionExpressionParser parser;
+	m_transitions[index].expression = parser.evaluate(condition);
+}
+
+void Animator::setTransitionCondition(unsigned int index, const ConditionExpression & expression)
+{
+	assert(index < m_transitions.size());
+
+	m_transitions[index].condition = expression.toString();
+	m_transitions[index].expression = expression;
 }

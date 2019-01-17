@@ -32,19 +32,22 @@ namespace NExpression
 		~Expression() = default;
 
 		Expression(const Expression<T> & expression)
-			: m_value(expression.m_value->clone())
+			: m_value(expression.m_value ? expression.m_value->clone() : nullptr)
 		{
 			m_value->registerParameter(*this);
 		}
 
 		Expression & operator=(const Expression<T> & expression)
 		{
-			m_value = expression.m_value->clone();
+			m_value.reset();
+			if(expression.m_value)
+				m_value = expression.m_value->clone();
 
 			m_parameterNames.clear();
 			m_parameters.clear();
 
-			m_value->registerParameter(*this);
+			if(m_value)
+				m_value->registerParameter(*this);
 
 			return *this;
 		}
@@ -90,7 +93,7 @@ namespace NExpression
 			return m_parameterNames.size();
 		}
 
-		std::string toString()
+		std::string toString() const
 		{
 			if (!m_value)
 				return "";
