@@ -50,5 +50,7 @@ public:
 		return object.release();
 	}
 
+	Frame current(float time, bool checkLoop = true);
+
 	bool loop = false;
 };

@@ -1,5 +1,7 @@
 #include "Animator/Animation.h"
 
+#include <cassert>
+
 Animation::Animation(bool _loop)
 	: loop(_loop)
 {
@@ -37,4 +39,26 @@ Nz::Recti Animation::bounds() const
 	}
 
 	return rect;
+}
+
+
+Frame Animation::current(float time, bool checkLoop)
+{
+	assert(!empty());
+	float totalTime = duration();
+
+	if (checkLoop && time > totalTime)
+	{
+		if (!loop)
+			time = totalTime;
+		else time = fmod(time, totalTime);
+	}
+
+	for (const auto & f : *this)
+	{
+		time -= f.time;
+		if (time <= 0)
+			return f;
+	}
+	return back();
 }

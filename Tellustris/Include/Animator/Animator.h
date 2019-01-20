@@ -41,6 +41,7 @@ class Animator : public Nz::RefCounted
 public:
 
 	Animator() = default;
+	Animator(AnimationRef anim, const std::string & animName = "State", bool xFlipped = false, bool yFlipped = false); //construct an animator with only one animation
 
 	unsigned int addAnimation(const std::string & name, AnimationRef anim, bool xFlipped = false, bool yFlipped = false);
 	void removeAnimation(const std::string & name);

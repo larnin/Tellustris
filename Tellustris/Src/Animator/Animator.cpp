@@ -7,6 +7,11 @@
 
 using ConditionExpressionParser = NExpression::ExpressionParser<int>;
 
+Animator::Animator(AnimationRef anim, const std::string & animName, bool xFlipped, bool yFlipped)
+{
+	addAnimation(animName, anim, xFlipped, yFlipped);
+}
+
 unsigned int Animator::addAnimation(const std::string & name, AnimationRef anim, bool xFlipped, bool yFlipped)
 {
 	assert(!animationExist(name));
