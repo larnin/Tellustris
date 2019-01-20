@@ -187,6 +187,7 @@ void AnimatorComponent::changeState(unsigned int nextState)
 		Transition t;
 		t.expression = m_animator->transitionConditionExpression(index);
 		t.nextStateIndex = m_animator->transitionToStateIndex(index);
+		m_transitionExpressions.push_back(t);
 	}
 
 	updateSprite();
@@ -225,7 +226,28 @@ void AnimatorComponent::updateSprite()
 
 	for (auto & s : m_sprites)
 	{
-		s->SetTextureRect(Nz::Rectui(frame.rect));
+		//does the same than SetTextureRect to be able to flip uvs
+		const auto& material = s->GetMaterial();
+		NazaraAssert(material->HasDiffuseMap(), "Sprite material has no diffuse map");
+		auto diffuseMap = material->GetDiffuseMap();
+
+		float invWidth = 1.f / diffuseMap->GetWidth();
+		float invHeight = 1.f / diffuseMap->GetHeight();
+		
+		Nz::Rectf rect(invWidth * frame.rect.x, invHeight * frame.rect.y, invWidth * frame.rect.width, invHeight * frame.rect.height);
+		if (m_animator->isAnimationXFlipped(m_currentState))
+		{
+			rect.width *= -1;
+			rect.x -= rect.width;
+		}
+		if (m_animator->isAnimationYFlipped(m_currentState))
+		{
+			rect.height *= -1;
+			rect.y -= rect.height;
+		}
+
+		s->SetTextureCoords(rect);
+		s->SetSize(Nz::Vector2f(static_cast<float>(frame.rect.width), static_cast<float>(frame.rect.height)));
 		s->SetOrigin(Nz::Vector3f(static_cast<float>(frame.offset.x), static_cast<float>(frame.offset.y), 0));
 	}
 }
