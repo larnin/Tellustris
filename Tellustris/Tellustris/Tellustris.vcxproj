@@ -133,6 +133,7 @@
     <ClCompile Include="..\Src\InitSystemsAndComponents.cpp" />
     <ClCompile Include="..\Src\main.cpp" />
     <ClCompile Include="..\Src\Systems\AnimatorSystem.cpp" />
+    <ClCompile Include="..\Src\Utility\Event\WindowEventsHolder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Animator\Animation.h" />
@@ -140,6 +141,9 @@
     <ClInclude Include="..\Include\Components\AnimatorComponent.h" />
     <ClInclude Include="..\Include\InitSystemsAndComponents.h" />
     <ClInclude Include="..\Include\Systems\AnimatorSystem.h" />
+    <ClInclude Include="..\Include\Utility\Event\Event.h" />
+    <ClInclude Include="..\Include\Utility\Event\WindowEventArgs.h" />
+    <ClInclude Include="..\Include\Utility\Event\WindowEventsHolder.h" />
     <ClInclude Include="..\Include\Utility\Expression\Expression.h" />
     <ClInclude Include="..\Include\Utility\Expression\ExpressionParser.h" />
     <ClInclude Include="..\Include\Utility\Expression\ExpressionValue.h" />
@@ -147,6 +151,9 @@
     <ClInclude Include="..\Include\Utility\StringOperation.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Include\Utility\Event\Event.inl">
+      <FileType>Document</FileType>
+    </None>
     <None Include="..\Include\Utility\Expression\ExpressionParser.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

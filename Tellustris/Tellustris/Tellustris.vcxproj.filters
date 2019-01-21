@@ -37,6 +37,15 @@
     <Filter Include="Fichiers d%27en-tête\Utility\Expression">
       <UniqueIdentifier>{155ba5f6-fd4d-4ac6-b492-a7ff25cf013f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\Utility\Event">
+      <UniqueIdentifier>{b76fff22-1378-45bf-9a2d-2f3d703fe36c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Utility">
+      <UniqueIdentifier>{6a7e55a9-4cb3-4498-9169-4352e3c5f4ab}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\Utility\Event">
+      <UniqueIdentifier>{18e9469d-41a1-4fe4-8a53-314469bf087d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Src\main.cpp">
@@ -56,6 +65,9 @@
     </ClCompile>
     <ClCompile Include="..\Src\Animator\Animator.cpp">
       <Filter>Fichiers sources\Animator</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Utility\Event\WindowEventsHolder.cpp">
+      <Filter>Fichiers sources\Utility\Event</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -89,10 +101,22 @@
     <ClInclude Include="..\Include\Utility\StringOperation.h">
       <Filter>Fichiers d%27en-tête\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Utility\Event\WindowEventArgs.h">
+      <Filter>Fichiers d%27en-tête\Utility\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Utility\Event\WindowEventsHolder.h">
+      <Filter>Fichiers d%27en-tête\Utility\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Utility\Event\Event.h">
+      <Filter>Fichiers d%27en-tête\Utility\Event</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Include\Utility\Expression\ExpressionParser.inl">
       <Filter>Fichiers d%27en-tête\Utility\Expression</Filter>
+    </None>
+    <None Include="..\Include\Utility\Event\Event.inl">
+      <Filter>Fichiers d%27en-tête\Utility\Event</Filter>
     </None>
   </ItemGroup>
 </Project>

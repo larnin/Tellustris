@@ -2,6 +2,7 @@
 #include "InitSystemsAndComponents.h"
 #include "Systems/AnimatorSystem.h"
 #include "Components/AnimatorComponent.h"
+#include "Utility/Event/WindowEventsHolder.h"
 
 #include <NDK/Application.hpp>
 #include <NDK/World.hpp> 
@@ -10,7 +11,8 @@
 #include <NDK/Components/CameraComponent.hpp>
 #include <NDK/Components/GraphicsComponent.hpp>
 #include <Nazara/Graphics/Sprite.hpp>
-#include <Nazara/Renderer.hpp>
+#include <Nazara/Renderer/TextureSampler.hpp>
+#include <Nazara/Renderer/RenderWindow.hpp>
 #include <iostream>
 
 #include "Utility/Expression/ExpressionParser.h"
@@ -20,11 +22,15 @@ int main()
 {
 	InitializeSystemsAndComponents();
 
+	Nz::TextureSampler::SetDefaultFilterMode(Nz::SamplerFilter::SamplerFilter_Nearest);
+
 	Ndk::Application application;
 
 	Nz::RenderWindow& mainWindow = application.AddWindow<Nz::RenderWindow>();
 	mainWindow.Create(Nz::VideoMode(800, 600, 32), "Test");
 	mainWindow.SetFramerateLimit(60);
+
+	WindowEventsHolder windowEventsHolder(mainWindow.GetEventHandler());
 
 	Ndk::World& world = application.AddWorld();
 	world.AddSystem<AnimatorSystem>();
