@@ -46,6 +46,12 @@
     <Filter Include="Fichiers sources\Utility\Event">
       <UniqueIdentifier>{18e9469d-41a1-4fe4-8a53-314469bf087d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers sources\Tilemap">
+      <UniqueIdentifier>{4fe91e43-9e28-4649-922e-55b6f8ee722d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers d%27en-tête\Tilemap">
+      <UniqueIdentifier>{cad6746f-1890-4bef-8f2f-45bcb7a79663}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Src\main.cpp">
@@ -68,6 +74,12 @@
     </ClCompile>
     <ClCompile Include="..\Src\Utility\Event\WindowEventsHolder.cpp">
       <Filter>Fichiers sources\Utility\Event</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Tilemap\Tilemap.cpp">
+      <Filter>Fichiers sources\Tilemap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Components\TilemapComponent.cpp">
+      <Filter>Fichiers sources\Components</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -109,6 +121,15 @@
     </ClInclude>
     <ClInclude Include="..\Include\Utility\Event\Event.h">
       <Filter>Fichiers d%27en-tête\Utility\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Utility\Matrix.h">
+      <Filter>Fichiers d%27en-tête\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Tilemap\Tilemap.h">
+      <Filter>Fichiers d%27en-tête\Tilemap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Components\TilemapComponent.h">
+      <Filter>Fichiers d%27en-tête\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

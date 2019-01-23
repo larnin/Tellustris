@@ -1,8 +1,7 @@
 #pragma once
 
-#include "Nazara/Math/Rect.hpp"
-#include "Nazara/Math/Vector2.hpp"
-
+#include <Nazara/Math/Rect.hpp>
+#include <Nazara/Math/Vector2.hpp>
 #include <Nazara/Core/RefCounted.hpp>
 #include <Nazara/Core/ObjectRef.hpp>
 
