@@ -74,6 +74,7 @@ EventHolder<T> & EventHolder<T>::operator=(EventHolder<T> && e)
 		m_eventImpl->disconnected = true;
 	m_eventImpl = e.m_eventImpl;
 	e.m_eventImpl = nullptr;
+	return *this;
 }
 
 template<typename T>

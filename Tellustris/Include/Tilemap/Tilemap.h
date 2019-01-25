@@ -20,7 +20,11 @@ public:
 	using iterator = std::vector<TileType>::iterator;
 	using const_iterator = std::vector<TileType>::const_iterator;
 
-	class TilemapModified{};
+	struct TilemapModified
+	{
+		size_t x;
+		size_t y;
+	};
 
 	Tilemap(size_t width, size_t height, unsigned int tileSize = 1, unsigned int tileDelta = 0);
 	Tilemap(const Tilemap &) = delete;

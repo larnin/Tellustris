@@ -17,7 +17,7 @@ void Tilemap::setTile(size_t x, size_t y, Tilemap::TileType value)
 {
 	m_matrix(x, y) = value;
 
-	m_event.send({});
+	m_event.send({x, y});
 }
 
 void Tilemap::setTileSize(unsigned int size)
@@ -26,12 +26,12 @@ void Tilemap::setTileSize(unsigned int size)
 
 	m_tileSize = size;
 
-	m_event.send({});
+	m_event.send({~0u, ~0u});
 }
 
 void Tilemap::setTileDelta(unsigned int delta)
 {
 	m_tileDelta = delta;
 
-	m_event.send({});
+	m_event.send({~0u, ~0u});
 }

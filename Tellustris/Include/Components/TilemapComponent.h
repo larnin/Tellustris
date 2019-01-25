@@ -11,10 +11,8 @@ class TilemapComponent : public Ndk::Component<TilemapComponent>
 {
 public:
 	TilemapComponent() = default;
-	TilemapComponent(const TilemapComponent &) = delete;
-	TilemapComponent & operator=(const TilemapComponent &) = delete;
-	TilemapComponent(TilemapComponent &&) = default;
-	TilemapComponent & operator=(TilemapComponent &&) = default;
+	TilemapComponent(const TilemapComponent & map);
+	TilemapComponent & operator=(const TilemapComponent & map);
 
 	void attachTilemap(TilemapRef tilemap);
 	void attachRenderer(Nz::TileMapRef renderer);
@@ -25,7 +23,7 @@ public:
 
 private:
 	void updateRenderer(Nz::TileMapRef renderer);
-	void onTilemapUpdate();
+	void onTilemapUpdate(size_t x, size_t y);
 
 	TilemapRef m_tilemap;
 	std::vector<Nz::TileMapRef> m_renderers;
