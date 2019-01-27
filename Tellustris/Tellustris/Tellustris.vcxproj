@@ -130,21 +130,27 @@
     <ClCompile Include="..\Src\Animator\Animation.cpp" />
     <ClCompile Include="..\Src\Animator\Animator.cpp" />
     <ClCompile Include="..\Src\Components\AnimatorComponent.cpp" />
+    <ClCompile Include="..\Src\Components\TilemapAnimationComponent.cpp" />
     <ClCompile Include="..\Src\Components\TilemapComponent.cpp" />
     <ClCompile Include="..\Src\InitSystemsAndComponents.cpp" />
     <ClCompile Include="..\Src\main.cpp" />
     <ClCompile Include="..\Src\Systems\AnimatorSystem.cpp" />
+    <ClCompile Include="..\Src\Systems\TilemapAnimationsSystem.cpp" />
     <ClCompile Include="..\Src\Tilemap\Tilemap.cpp" />
+    <ClCompile Include="..\Src\Tilemap\TilemapAnimations.cpp" />
     <ClCompile Include="..\Src\Utility\Event\WindowEventsHolder.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Animator\Animation.h" />
     <ClInclude Include="..\Include\Animator\Animator.h" />
     <ClInclude Include="..\Include\Components\AnimatorComponent.h" />
+    <ClInclude Include="..\Include\Components\TilemapAnimationComponent.h" />
     <ClInclude Include="..\Include\Components\TilemapComponent.h" />
     <ClInclude Include="..\Include\InitSystemsAndComponents.h" />
     <ClInclude Include="..\Include\Systems\AnimatorSystem.h" />
+    <ClInclude Include="..\Include\Systems\TilemapAnimationsSystem.h" />
     <ClInclude Include="..\Include\Tilemap\Tilemap.h" />
+    <ClInclude Include="..\Include\Tilemap\TilemapAnimations.h" />
     <ClInclude Include="..\Include\Utility\Event\Event.h" />
     <ClInclude Include="..\Include\Utility\Event\WindowEventArgs.h" />
     <ClInclude Include="..\Include\Utility\Event\WindowEventsHolder.h" />

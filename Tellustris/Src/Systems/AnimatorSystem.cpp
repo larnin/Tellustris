@@ -2,13 +2,11 @@
 #include "Systems/AnimatorSystem.h"
 #include "Components/AnimatorComponent.h"
 
-#include <NDK/Components/NodeComponent.hpp>
-
 Ndk::SystemIndex AnimatorSystem::systemIndex;
 
 AnimatorSystem::AnimatorSystem()
 {
-	Requires<Ndk::NodeComponent, AnimatorComponent>();
+	Requires<AnimatorComponent>();
 }
 
 void AnimatorSystem::OnUpdate(float elapsedTime)

@@ -81,6 +81,15 @@
     <ClCompile Include="..\Src\Components\TilemapComponent.cpp">
       <Filter>Fichiers sources\Components</Filter>
     </ClCompile>
+    <ClCompile Include="..\Src\Components\TilemapAnimationComponent.cpp">
+      <Filter>Fichiers sources\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Tilemap\TilemapAnimations.cpp">
+      <Filter>Fichiers sources\Tilemap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Systems\TilemapAnimationsSystem.cpp">
+      <Filter>Fichiers sources\Systems</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Systems\AnimatorSystem.h">
@@ -130,6 +139,15 @@
     </ClInclude>
     <ClInclude Include="..\Include\Components\TilemapComponent.h">
       <Filter>Fichiers d%27en-tête\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Components\TilemapAnimationComponent.h">
+      <Filter>Fichiers d%27en-tête\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Tilemap\TilemapAnimations.h">
+      <Filter>Fichiers d%27en-tête\Tilemap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Systems\TilemapAnimationsSystem.h">
+      <Filter>Fichiers d%27en-tête\Systems</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
