@@ -122,7 +122,10 @@ int main()
 
 	Ndk::EntityHandle player = world.CreateEntity();
 	{
-		auto sprite = Nz::Sprite::New(Nz::Material::New("Translucent3D"));
+		auto mat = Nz::Material::New("Translucent3D");
+		mat->EnableDepthSorting(true);
+		//mat->EnableDepthWrite(true);
+		auto sprite = Nz::Sprite::New(mat);
 		sprite->SetTexture("Img/square.png");
 		sprite->SetSize(14, 14);
 
@@ -145,8 +148,10 @@ int main()
 		anims->registerAnimation(16, { 17, 19, 21, 23, 22, 21, 20, 19, 18, 17, 16 }, "1");
 
 		auto mat = Nz::Material::New("Translucent3D");
+		mat->EnableDepthSorting(true);
+		//mat->EnableDepthWrite(true);
 		mat->SetDiffuseMap("Img/tile2.png");
-		auto tilemapR = Nz::TileMap::New(Nz::Vector2ui(20, 20), Nz::Vector2f(16.f, 16.f));
+		auto tilemapR = Nz::TileMap::New(Nz::Vector2ui(20, 20), Nz::Vector2f(16.f, 16.f), 1, Nz::Vector2f(0, 1));
 		tilemapR->SetMaterial(0, mat);
 
 		auto & node = tilemapEntity->AddComponent<Ndk::NodeComponent>();
