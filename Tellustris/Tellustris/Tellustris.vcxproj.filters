@@ -90,6 +90,12 @@
     <ClCompile Include="..\Src\Systems\TilemapAnimationsSystem.cpp">
       <Filter>Fichiers sources\Systems</Filter>
     </ClCompile>
+    <ClCompile Include="..\Src\Tilemap\TilemapCollider.cpp">
+      <Filter>Fichiers sources\Tilemap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Components\TilemapColliderComponent.cpp">
+      <Filter>Fichiers sources\Components</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Systems\AnimatorSystem.h">
@@ -148,6 +154,12 @@
     </ClInclude>
     <ClInclude Include="..\Include\Systems\TilemapAnimationsSystem.h">
       <Filter>Fichiers d%27en-tête\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Tilemap\TilemapCollider.h">
+      <Filter>Fichiers d%27en-tête\Tilemap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Components\TilemapColliderComponent.h">
+      <Filter>Fichiers d%27en-tête\Components</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
