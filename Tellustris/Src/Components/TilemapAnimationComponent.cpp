@@ -158,7 +158,7 @@ void TilemapAnimationComponent::onTilemapUpdate(size_t x, size_t y)
 			m_playingAnimations.pop_back();
 		}
 
-		addTile(x, y, m_playingAnimations, m_tilemap->getTile(x, y));
+		addTile(x, y, m_playingAnimations, m_tilemap->getTile(x, y).id);
 	}
 }
 
@@ -179,7 +179,7 @@ void TilemapAnimationComponent::updateAnimations()
 
 	for(size_t x = 0; x < m_tilemap->width(); x++)
 		for (size_t y = 0; y < m_tilemap->height(); y++)
-			addTile(x, y, m_playingAnimations, m_tilemap->getTile(x, y));
+			addTile(x, y, m_playingAnimations, m_tilemap->getTile(x, y).id);
 }
 
 void TilemapAnimationComponent::addTile(size_t x, size_t y, std::vector<TilemapAnimationComponent::PlayingAnimation> & vect, unsigned int tile)

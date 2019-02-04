@@ -5,6 +5,7 @@
 #include "Components/AnimatorComponent.h"
 #include "Components/TilemapComponent.h"
 #include "Components/TilemapAnimationComponent.h"
+#include "Components/TilemapColliderComponent.h"
 #include "Utility/Event/WindowEventsHolder.h"
 
 #include <NDK/Application.hpp>
@@ -17,17 +18,51 @@
 #include <Nazara/Renderer/TextureSampler.hpp>
 #include <Nazara/Renderer/RenderWindow.hpp>
 #include <Nazara/Platform/Keyboard.hpp>
+#include <NDK/Systems/PhysicsSystem2D.hpp>
+#include <Nazara/Renderer/DebugDrawer.hpp>
 
 #include <iostream>
 #include <random>
 
+#define NAZARA_RENDERER_OPENGL
+#include <Nazara/Renderer/OpenGL.hpp>
+
+//int main()
+//{
+//	Ndk::Application application;
+//
+//	Nz::RenderWindow& mainWindow = application.AddWindow<Nz::RenderWindow>();
+//	mainWindow.Create(Nz::VideoMode(800, 600, 32), "Test");
+//	mainWindow.SetFramerateLimit(60);
+//
+//	Nz::DebugDrawer::SetPrimaryColor(Nz::Color::Red);
+//	Nz::DebugDrawer::SetSecondaryColor(Nz::Color::Red);
+//
+//	Nz::Vector3f center{ 400, 300, -20 };
+//	const float size = 30.f;
+//
+//	float a = 0;
+//
+//	while (application.Run())
+//	{
+//		a += 0.01f;
+//
+//		Nz::Vector3f pos{ size * cos(a), size * sin(a), 0 };
+//		Nz::DebugDrawer::DrawLine(center + pos, center - pos);
+//
+//		mainWindow.Display();
+//	}
+//		
+//	return EXIT_SUCCESS;
+//}
+
 int main()
 {
+	Ndk::Application application;
+
 	InitializeSystemsAndComponents();
 
 	Nz::TextureSampler::SetDefaultFilterMode(Nz::SamplerFilter::SamplerFilter_Nearest);
-
-	Ndk::Application application;
 
 	Nz::RenderWindow& mainWindow = application.AddWindow<Nz::RenderWindow>();
 	mainWindow.Create(Nz::VideoMode(800, 600, 32), "Test");
@@ -40,11 +75,25 @@ int main()
 	world.AddSystem<TilemapAnimationsSystem>();
 	world.GetSystem<Ndk::RenderSystem>().SetGlobalUp(Nz::Vector3f::Down());
 
+	Ndk::PhysicsSystem2D::DebugDrawOptions options;
+	options.polygonCallback = [](const Nz::Vector2f* vertices, std::size_t vertexCount, float radius, Nz::Color outline, Nz::Color fillColor, void* userData)
+	{
+		for (std::size_t i = 0; i < vertexCount - 1; ++i)
+			Nz::DebugDrawer::DrawLine(vertices[i], vertices[i + 1]);
+
+		Nz::DebugDrawer::DrawLine(vertices[vertexCount - 1], vertices[0]);
+	};
+
+	world.GetSystem<Ndk::PhysicsSystem2D>().DebugDraw(options);
+
+
 	Ndk::EntityHandle viewEntity = world.CreateEntity();
 	viewEntity->AddComponent<Ndk::NodeComponent>();
 	Ndk::CameraComponent& viewer = viewEntity->AddComponent<Ndk::CameraComponent>();
 	viewer.SetTarget(&mainWindow);
 	viewer.SetProjectionType(Nz::ProjectionType_Orthogonal);
+
+	std::cout << std::boolalpha << Nz::OpenGL::IsSupported("GL_ARB_separate_shader_objects") << std::endl;
 
 	/*{
 		const int frameSize = 40;
@@ -138,10 +187,20 @@ int main()
 
 	Ndk::EntityHandle tilemapEntity = world.CreateEntity();
 	{
+		std::mt19937 rand;
+		std::bernoulli_distribution d(0.95);
+
+		TileCollider col;
+		col.type = TileColliderType::Full;
+		TileCollider col2;
+		col2.type = TileColliderType::Triangle;
+
 		auto tilemap = Tilemap::New(20, 20, 16, 0);
 		for (size_t x = 0; x < tilemap->width(); x++)
 			for (size_t y = 0; y < tilemap->height(); y++)
-				tilemap->setTile(x, y, 8);
+				if (d(rand))
+					tilemap->setTile(x, y, { 8, col });
+				else tilemap->setTile(x, y, { 8, col2 });
 
 		auto anims = TilemapAnimations::New(0.1f);
 		anims->registerAnimation(8, { 9, 11, 13, 12, 11, 10, 9, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 }, "2*sqrt((x-0.5)*(x-0.5)+(y-0.5)*(y-0.5))");
@@ -160,16 +219,20 @@ int main()
 		auto & graph = tilemapEntity->AddComponent<Ndk::GraphicsComponent>();
 		auto & map = tilemapEntity->AddComponent<TilemapComponent>();
 		auto & anim = tilemapEntity->AddComponent<TilemapAnimationComponent>();
+		auto & collider = tilemapEntity->AddComponent<TilemapColliderComponent>();
 		graph.Attach(tilemapR);
 		map.attachRenderer(tilemapR);
 		map.attachTilemap(tilemap);
 		anim.attachRenderer(tilemapR);
 		anim.attachTilemap(tilemap);
 		anim.attachAnimations(anims);
+		collider.attachTilemap(tilemap);
 	}
 
 	auto & playerNode = player->GetComponent<Ndk::NodeComponent>();
 	auto & mapAnim = tilemapEntity->GetComponent<TilemapAnimationComponent>();
+
+	auto & collider = tilemapEntity->GetComponent<TilemapColliderComponent>();
 
 	std::vector<Nz::Vector2ui> overlapPos;
 

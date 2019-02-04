@@ -7,6 +7,8 @@
 #include <NDK/Components/CollisionComponent2D.hpp>
 #include <Nazara/Physics2D/Collider2D.hpp>
 
+#include <Nazara/Renderer/DebugDrawer.hpp>
+
 Ndk::ComponentIndex TilemapColliderComponent::componentIndex;
 
 TilemapColliderComponent::TilemapColliderComponent(const TilemapColliderComponent & map)
@@ -17,7 +19,6 @@ TilemapColliderComponent::TilemapColliderComponent(const TilemapColliderComponen
 TilemapColliderComponent & TilemapColliderComponent::operator=(const TilemapColliderComponent & map)
 {
 	attachTilemap(map.m_tilemap);
-	attachColliders(map.m_colliders);
 
 	return *this;
 }
@@ -30,39 +31,25 @@ void TilemapColliderComponent::attachTilemap(TilemapRef tilemap)
 
 	if (m_tilemap)
 		m_mapModifiedEvent = m_tilemap->registerTilemapModifiedCallback([this](const auto & e) {onTilemapModified(e.x, e.y); });
-}
 
-void TilemapColliderComponent::attachColliders(TilemapColliderRef collider)
-{
-	m_colliderModifiedEvent.disconnect();
-
-	m_colliders = collider;
-
-	if (m_colliders)
-		m_colliderModifiedEvent = m_colliders->registerAnimationsModifiedCallback([this](const auto &) {onColliderModified(); });
+	updateLayers();
 }
 
 void TilemapColliderComponent::onTilemapModified(size_t x, size_t y)
 {
 	assert(m_tilemap);
 
-	if (!m_colliders)
-		return;
-
 	if (x >= m_tilemap->width() || y >= m_tilemap->height())
 		updateLayers();
 
-	updateLayer(m_colliders->layer(m_tilemap->getTile(x, y)));
+	updateLayer(m_tilemap->getTile(x, y).collider.collisionLayer);
 }
-
-void TilemapColliderComponent::onColliderModified()
-{
-	updateLayers();
-}
-
 
 void TilemapColliderComponent::updateLayers()
 {
+	if (!m_tilemap)
+		return;
+
 	for (auto & e : m_layers)
 		e.entity->Kill();
 	m_layers.clear();
@@ -70,7 +57,9 @@ void TilemapColliderComponent::updateLayers()
 	for(size_t x = 0; x < m_tilemap->width(); x++)
 		for (size_t y = 0; y < m_tilemap->height(); y++)
 		{
-			auto id = m_colliders->layer(m_tilemap->getTile(x, y));
+			if(! m_tilemap->getTile(x, y).collider.haveCollision())
+				continue;
+			auto id = m_tilemap->getTile(x, y).collider.collisionLayer;
 			if (std::find_if(m_layers.begin(), m_layers.end(), [id](const auto & l)
 			{ return id == l.id; }) == m_layers.end())
 				updateLayer(id);
@@ -89,7 +78,7 @@ void TilemapColliderComponent::updateLayer(unsigned int index)
 	
 	auto thisEntity = GetEntity();
 	assert(thisEntity->HasComponent<Ndk::NodeComponent>());
-	auto thisNode = thisEntity->GetComponent<Ndk::NodeComponent>();
+	auto & thisNode = thisEntity->GetComponent<Ndk::NodeComponent>();
 
 	auto entity = thisEntity->GetWorld()->CreateEntity();
 	auto & node = entity->AddComponent<Ndk::NodeComponent>();
@@ -100,31 +89,49 @@ void TilemapColliderComponent::updateLayer(unsigned int index)
 	std::vector<Nz::Collider2DRef> colliders;
 	float tileSize = static_cast<float>(m_tilemap->tileSize());
 
-	for (size_t x = 0; x < m_tilemap->width(); x++)
-		for (size_t y = 0; y < m_tilemap->height(); y++)
+	for (size_t y = 0; y < m_tilemap->height(); y++)
+		for (size_t x = 0; x < m_tilemap->width(); x++)
 		{
 			if (mat(x, y))
 				continue;
+			auto tile = m_tilemap->getTile(x, y);
+			if (!tile.collider.haveCollision())
+				continue;
 
-			if (m_colliders->layer(m_tilemap->getTile(x, y)) == index)
+			if (!tile.collider.haveFullCollision())
+			{
+				colliders.push_back(tile.collider.toCollider(Nz::Vector2f(x * tileSize, y * tileSize), Nz::Vector2f(tileSize, tileSize)));
+			}
+			else if (tile.collider.collisionLayer == index)
 			{
 				size_t width = 1;
 				for (size_t i = 1; i + x < m_tilemap->width(); i++)
-					if (m_colliders->layer(m_tilemap->getTile(x + i, y)) != index)
+				{
+					if (mat(x + i, y))
 						break;
-					else width++;
+					auto tile2 = m_tilemap->getTile(x + i, y);
+					if (!tile2.collider.haveFullCollision())
+						break;
+					if (tile2.collider.collisionLayer != index)
+						break;
+					width++;
+				}
 				size_t height = 1;
 				for (size_t j = 1; j + y < m_tilemap->height(); j++)
 				{
 					bool allValid = true;
-					for(size_t i = 0; i < width; i++)
-						if (m_colliders->layer(m_tilemap->getTile(x + i, y + j)) != index)
+					for (size_t i = 0; i < width; i++)
+					{
+						auto tile3 = m_tilemap->getTile(x + i, y + j);
+						if (mat(x + i, y + j) || !tile3.collider.haveFullCollision() || tile3.collider.collisionLayer != index)
 						{
 							allValid = false;
 							break;
 						}
+					}
 					if (allValid)
 						height++;
+					else break;
 				}
 
 				for (size_t i = 0; i < width; i++)
@@ -135,10 +142,7 @@ void TilemapColliderComponent::updateLayer(unsigned int index)
 			}
 		}
 
-
-	Nz::CompoundCollider2DRef collider = Nz::CompoundCollider2D::New(colliders);
-	auto & collision = entity->AddComponent<Ndk::CollisionComponent2D>();
-	collision.SetGeom(collider);
+	auto & collision = entity->AddComponent<Ndk::CollisionComponent2D>(Nz::CompoundCollider2D::New(colliders));
 
 	m_layers.push_back(ColliderLayer{ index, entity });
 }

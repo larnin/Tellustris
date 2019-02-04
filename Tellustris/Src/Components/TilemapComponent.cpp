@@ -79,7 +79,7 @@ void TilemapComponent::updateRenderer(Nz::TileMapRef renderer)
 	for(size_t x = 0 ; x < m_tilemap->width() ; x++)
 		for (size_t y = 0; y < m_tilemap->height(); y++)
 		{
-			auto tile = m_tilemap->getTile(x, y);
+			auto tile = m_tilemap->getTile(x, y).id;
 			if (tile == 0)
 				renderer->DisableTile(Nz::Vector2ui(static_cast<unsigned int>(x), static_cast<unsigned int>(y)));
 			else
@@ -103,7 +103,7 @@ void TilemapComponent::onTilemapUpdate(size_t x, size_t y)
 			updateRenderer(t);
 	else
 	{
-		auto tile = m_tilemap->getTile(x, y);
+		auto tile = m_tilemap->getTile(x, y).id;
 		for (auto renderer : m_renderers)
 		{
 			if (tile == 0)

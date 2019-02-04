@@ -2,6 +2,7 @@
 
 #include "Utility/Matrix.h"
 #include "Utility/Event/Event.h"
+#include "Tile.h"
 
 #include <Nazara/Core/RefCounted.hpp>
 #include <Nazara/Core/ObjectRef.hpp>
@@ -16,7 +17,7 @@ using TilemapConstRef = Nz::ObjectRef<const Tilemap>;
 class Tilemap : public Nz::RefCounted
 {
 public:
-	using TileType = unsigned int;
+	using TileType = Tile;
 	using iterator = std::vector<TileType>::iterator;
 	using const_iterator = std::vector<TileType>::const_iterator;
 

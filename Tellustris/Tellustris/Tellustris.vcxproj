@@ -84,7 +84,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Nicolas\Programation\c++\Nazara\Repo\NazaraEngine\include;C:\Users\Nicolas\Programation\c++\Nazara\Repo\NazaraEngine\SDK\include;C:\Users\Nicolas\Programation\c++\Projets\Tellustris\Tellustris\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Nicolas\Programation\c++\Nazara\Repo\NazaraEngine\include;C:\Users\Nicolas\Programation\c++\Nazara\Repo\NazaraEngine\SDK\include;C:\Users\Nicolas\Programation\c++\Projets\Tellustris\Tellustris\Include;C:\Users\Nicolas\Programation\c++\Nazara\Repo\NazaraEngine\thirdparty\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -115,7 +115,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>C:\Users\Nicolas\Programation\c++\Nazara\Repo\NazaraEngine\include;C:\Users\Nicolas\Programation\c++\Nazara\Repo\NazaraEngine\SDK\include;C:\Users\Nicolas\Programation\c++\Projets\Tellustris\Tellustris\Include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\Nicolas\Programation\c++\Nazara\Repo\NazaraEngine\include;C:\Users\Nicolas\Programation\c++\Nazara\Repo\NazaraEngine\SDK\include;C:\Users\Nicolas\Programation\c++\Projets\Tellustris\Tellustris\Include;C:\Users\Nicolas\Programation\c++\Nazara\Repo\NazaraEngine\thirdparty\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_SCL_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
@@ -137,9 +137,9 @@
     <ClCompile Include="..\Src\main.cpp" />
     <ClCompile Include="..\Src\Systems\AnimatorSystem.cpp" />
     <ClCompile Include="..\Src\Systems\TilemapAnimationsSystem.cpp" />
+    <ClCompile Include="..\Src\Tilemap\Tile.cpp" />
     <ClCompile Include="..\Src\Tilemap\Tilemap.cpp" />
     <ClCompile Include="..\Src\Tilemap\TilemapAnimations.cpp" />
-    <ClCompile Include="..\Src\Tilemap\TilemapCollider.cpp" />
     <ClCompile Include="..\Src\Utility\Event\WindowEventsHolder.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -152,9 +152,9 @@
     <ClInclude Include="..\Include\InitSystemsAndComponents.h" />
     <ClInclude Include="..\Include\Systems\AnimatorSystem.h" />
     <ClInclude Include="..\Include\Systems\TilemapAnimationsSystem.h" />
+    <ClInclude Include="..\Include\Tilemap\Tile.h" />
     <ClInclude Include="..\Include\Tilemap\Tilemap.h" />
     <ClInclude Include="..\Include\Tilemap\TilemapAnimations.h" />
-    <ClInclude Include="..\Include\Tilemap\TilemapCollider.h" />
     <ClInclude Include="..\Include\Utility\Event\Event.h" />
     <ClInclude Include="..\Include\Utility\Event\WindowEventArgs.h" />
     <ClInclude Include="..\Include\Utility\Event\WindowEventsHolder.h" />
