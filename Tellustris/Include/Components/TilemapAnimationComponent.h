@@ -57,6 +57,7 @@ private:
 	void updateAnimations();
 	void addTile(size_t x, size_t y, std::vector<PlayingAnimation> & vect, unsigned int tile);
 	void updateFrame(PlayingAnimation & a, const std::vector<Nz::Vector2ui> & renderersSize, float fTime, unsigned int tileSize, unsigned int tileDelta, float delay);
+	void removeFrame(size_t x, size_t y);
 
 	float m_time;
 	std::vector<PlayingAnimation> m_playingAnimations;

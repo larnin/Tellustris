@@ -113,8 +113,10 @@ void TilemapAnimationComponent::update(float elapsedTime)
 			if (it != m_playingAnimations.end())
 				it->overWrite = false;
 
+			removeFrame(m_tempPlayingAnimations[i].x, m_tempPlayingAnimations[i].y);
 			m_tempPlayingAnimations[i] = m_tempPlayingAnimations.back();
 			m_tempPlayingAnimations.pop_back();
+
 		}
 	}
 
@@ -156,6 +158,13 @@ void TilemapAnimationComponent::onTilemapUpdate(size_t x, size_t y)
 		{
 			*it = m_playingAnimations.back();
 			m_playingAnimations.pop_back();
+		}
+
+		it = std::find_if(m_tempPlayingAnimations.begin(), m_tempPlayingAnimations.end(), [x, y](const auto & t) {return x == t.x && y == t.y; });
+		if (it != m_tempPlayingAnimations.end())
+		{
+			*it = m_tempPlayingAnimations.back();
+			m_tempPlayingAnimations.pop_back();
 		}
 
 		addTile(x, y, m_playingAnimations, m_tilemap->getTile(x, y).id);
@@ -217,9 +226,9 @@ void TilemapAnimationComponent::updateFrame(PlayingAnimation & a, const std::vec
 
 	for (size_t i = 0; i < m_renderers.size(); i++)
 	{
-		auto nbWidth = (renderersSize[i].x + m_tilemap->tileDelta()) / (tileSize + m_tilemap->tileDelta());
+		auto tileSpace = tileSize + tileDelta;
+		auto nbWidth = (renderersSize[i].x + m_tilemap->tileDelta()) / tileSpace;
 		assert(nbWidth > 0);
-		auto tileSpace = tileDelta + m_tilemap->tileSize();
 
 		float invWidth = 1.f / renderersSize[i].x;
 		float invHeight = 1.f / renderersSize[i].y;
@@ -229,5 +238,50 @@ void TilemapAnimationComponent::updateFrame(PlayingAnimation & a, const std::vec
 
 		Nz::Rectf rect(tX * tileSpace * invWidth, tY * tileSpace * invHeight, tileSize * invWidth, tileSize * invHeight);
 		m_renderers[i]->EnableTile(Nz::Vector2ui(static_cast<unsigned int>(a.x), static_cast<unsigned int>(a.y)), rect);
+	}
+}
+
+void TilemapAnimationComponent::removeFrame(size_t x, size_t y)
+{
+	auto it = std::find_if(m_playingAnimations.begin(), m_playingAnimations.end(), [x, y](const auto & t) { return x == t.x && y == t.y; });
+	if (it != m_playingAnimations.end())
+	{
+		it->currentFrameIndex = ~0;
+		return;
+	}
+
+	if (!m_tilemap)
+		return;
+
+	auto id = m_tilemap->getTile(x, y).id;
+
+	if (id == 0)
+	{
+		for (auto & r : m_renderers)
+			r->DisableTile(Nz::Vector2ui(static_cast<unsigned int>(x), static_cast<unsigned int>(y)));
+		return;
+	}
+
+	auto tileSize = m_tilemap->tileSize();
+	auto tileDelta = m_tilemap->tileDelta();
+
+	for (auto & r : m_renderers)
+	{
+		const auto& material = r->GetMaterial();
+		NazaraAssert(material->HasDiffuseMap(), "Sprite material has no diffuse map");
+		auto diffuseMap = material->GetDiffuseMap();
+
+		auto tileSpace = tileSize + tileDelta;
+		auto nbWidth = (diffuseMap->GetWidth() + m_tilemap->tileDelta()) / tileSpace;
+		assert(nbWidth > 0);
+
+		float invWidth = 1.f / diffuseMap->GetWidth();
+		float invHeight = 1.f / diffuseMap->GetHeight();
+
+		auto tX = id % nbWidth;
+		auto tY = id / nbWidth;
+
+		Nz::Rectf rect(tX * tileSpace * invWidth, tY * tileSpace * invHeight, tileSize * invWidth, tileSize * invHeight);
+		r->EnableTile(Nz::Vector2ui(static_cast<unsigned int>(x), static_cast<unsigned int>(y)), rect);
 	}
 }

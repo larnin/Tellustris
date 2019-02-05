@@ -188,19 +188,16 @@ int main()
 	Ndk::EntityHandle tilemapEntity = world.CreateEntity();
 	{
 		std::mt19937 rand;
-		std::bernoulli_distribution d(0.95);
+		std::bernoulli_distribution d(0.5);
 
 		TileCollider col;
 		col.type = TileColliderType::Full;
-		TileCollider col2;
-		col2.type = TileColliderType::Triangle;
 
 		auto tilemap = Tilemap::New(20, 20, 16, 0);
 		for (size_t x = 0; x < tilemap->width(); x++)
 			for (size_t y = 0; y < tilemap->height(); y++)
 				if (d(rand))
 					tilemap->setTile(x, y, { 8, col });
-				else tilemap->setTile(x, y, { 8, col2 });
 
 		auto anims = TilemapAnimations::New(0.1f);
 		anims->registerAnimation(8, { 9, 11, 13, 12, 11, 10, 9, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8, 8 }, "2*sqrt((x-0.5)*(x-0.5)+(y-0.5)*(y-0.5))");
