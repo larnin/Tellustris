@@ -2,11 +2,14 @@
 #include "InitSystemsAndComponents.h"
 #include "Systems/AnimatorSystem.h"
 #include "Systems/TilemapAnimationsSystem.h"
+#include "Systems/BehaviourSystem.h"
 #include "Components/AnimatorComponent.h"
 #include "Components/TilemapComponent.h"
 #include "Components/TilemapAnimationComponent.h"
 #include "Components/TilemapColliderComponent.h"
+#include "Components/BehaviourComponent.h"
 #include "Utility/Event/WindowEventsHolder.h"
+#include "GameData/Behaviours/ViewUpdaterBehaviour.h"
 
 #include <NDK/Application.hpp>
 #include <NDK/World.hpp> 
@@ -23,9 +26,6 @@
 
 #include <iostream>
 #include <random>
-
-#define NAZARA_RENDERER_OPENGL
-#include <Nazara/Renderer/OpenGL.hpp>
 
 //int main()
 //{
@@ -73,6 +73,7 @@ int main()
 	Ndk::World& world = application.AddWorld();
 	world.AddSystem<AnimatorSystem>();
 	world.AddSystem<TilemapAnimationsSystem>();
+	world.AddSystem<BehaviourSystem>();
 	world.GetSystem<Ndk::RenderSystem>().SetGlobalUp(Nz::Vector3f::Down());
 
 	Ndk::PhysicsSystem2D::DebugDrawOptions options;
@@ -92,8 +93,6 @@ int main()
 	Ndk::CameraComponent& viewer = viewEntity->AddComponent<Ndk::CameraComponent>();
 	viewer.SetTarget(&mainWindow);
 	viewer.SetProjectionType(Nz::ProjectionType_Orthogonal);
-
-	std::cout << std::boolalpha << Nz::OpenGL::IsSupported("GL_ARB_separate_shader_objects") << std::endl;
 
 	/*{
 		const int frameSize = 40;
@@ -183,6 +182,8 @@ int main()
 		node.SetScale(2, 2, 2);
 		auto & graph = player->AddComponent<Ndk::GraphicsComponent>();
 		graph.Attach(sprite);
+		auto & behaviour = player->AddComponent<BehaviourComponent>();
+		behaviour.attach(std::make_unique<ViewUpdaterBehaviour>());
 	}
 
 	Ndk::EntityHandle tilemapEntity = world.CreateEntity();

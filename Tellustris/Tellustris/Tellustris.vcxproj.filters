@@ -58,6 +58,12 @@
     <Filter Include="Fichiers sources\GameData">
       <UniqueIdentifier>{e68174c7-d35a-452a-917c-69ef4448ff7d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\GameData\Behaviours">
+      <UniqueIdentifier>{3fc4388d-84eb-4c37-ab9b-133943461ef2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\GameData\Behaviours">
+      <UniqueIdentifier>{40087471-511a-4408-88f4-e0e474e9232d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Src\main.cpp">
@@ -107,6 +113,15 @@
     </ClCompile>
     <ClCompile Include="..\Src\GameData\WorldMap.cpp">
       <Filter>Fichiers sources\GameData</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Systems\BehaviourSystem.cpp">
+      <Filter>Fichiers sources\Systems</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\Components\BehaviourComponent.cpp">
+      <Filter>Fichiers sources\Components</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\GameData\Behaviours\ViewUpdaterBehaviour.cpp">
+      <Filter>Fichiers sources\GameData\Behaviours</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -178,6 +193,21 @@
     </ClInclude>
     <ClInclude Include="..\Include\GameData\WorldMap.h">
       <Filter>Fichiers d%27en-tête\GameData</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Systems\BehaviourSystem.h">
+      <Filter>Fichiers d%27en-tête\Systems</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Components\BehaviourComponent.h">
+      <Filter>Fichiers d%27en-tête\Components</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\GameData\Behaviours\Behaviour.h">
+      <Filter>Fichiers d%27en-tête\GameData\Behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\GameData\Behaviours\ViewUpdaterBehaviour.h">
+      <Filter>Fichiers d%27en-tête\GameData\Behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Utility\Event\Args.h">
+      <Filter>Fichiers d%27en-tête\Utility\Event</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
