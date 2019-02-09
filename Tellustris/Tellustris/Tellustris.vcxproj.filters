@@ -52,6 +52,12 @@
     <Filter Include="Fichiers d%27en-tête\Tilemap">
       <UniqueIdentifier>{cad6746f-1890-4bef-8f2f-45bcb7a79663}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Fichiers d%27en-tête\GameData">
+      <UniqueIdentifier>{1cc2f78c-fc82-4967-aaa3-18e8d06eae31}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Fichiers sources\GameData">
+      <UniqueIdentifier>{e68174c7-d35a-452a-917c-69ef4448ff7d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\Src\main.cpp">
@@ -95,6 +101,12 @@
     </ClCompile>
     <ClCompile Include="..\Src\Tilemap\Tile.cpp">
       <Filter>Fichiers sources\Tilemap</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\GameData\Chunk.cpp">
+      <Filter>Fichiers sources\GameData</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\GameData\WorldMap.cpp">
+      <Filter>Fichiers sources\GameData</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -160,6 +172,12 @@
     </ClInclude>
     <ClInclude Include="..\Include\Tilemap\Tile.h">
       <Filter>Fichiers d%27en-tête\Tilemap</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\GameData\Chunk.h">
+      <Filter>Fichiers d%27en-tête\GameData</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\GameData\WorldMap.h">
+      <Filter>Fichiers d%27en-tête\GameData</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
