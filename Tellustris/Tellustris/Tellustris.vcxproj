@@ -135,7 +135,9 @@
     <ClCompile Include="..\Src\Components\TilemapColliderComponent.cpp" />
     <ClCompile Include="..\Src\Components\TilemapComponent.cpp" />
     <ClCompile Include="..\Src\GameData\Behaviours\ViewUpdaterBehaviour.cpp" />
+    <ClCompile Include="..\Src\GameData\Behaviours\WorldRenderBehaviour.cpp" />
     <ClCompile Include="..\Src\GameData\Chunk.cpp" />
+    <ClCompile Include="..\Src\GameData\TileRenderDefinition.cpp" />
     <ClCompile Include="..\Src\GameData\WorldMap.cpp" />
     <ClCompile Include="..\Src\InitSystemsAndComponents.cpp" />
     <ClCompile Include="..\Src\main.cpp" />
@@ -157,7 +159,9 @@
     <ClInclude Include="..\Include\Components\TilemapComponent.h" />
     <ClInclude Include="..\Include\GameData\Behaviours\Behaviour.h" />
     <ClInclude Include="..\Include\GameData\Behaviours\ViewUpdaterBehaviour.h" />
+    <ClInclude Include="..\Include\GameData\Behaviours\WorldRenderBehaviour.h" />
     <ClInclude Include="..\Include\GameData\Chunk.h" />
+    <ClInclude Include="..\Include\GameData\TileRenderDefinition.h" />
     <ClInclude Include="..\Include\GameData\WorldMap.h" />
     <ClInclude Include="..\Include\InitSystemsAndComponents.h" />
     <ClInclude Include="..\Include\Systems\AnimatorSystem.h" />
@@ -173,6 +177,7 @@
     <ClInclude Include="..\Include\Utility\Expression\Expression.h" />
     <ClInclude Include="..\Include\Utility\Expression\ExpressionParser.h" />
     <ClInclude Include="..\Include\Utility\Expression\ExpressionValue.h" />
+    <ClInclude Include="..\Include\Utility\FixedMatrix.h" />
     <ClInclude Include="..\Include\Utility\Matrix.h" />
     <ClInclude Include="..\Include\Utility\StaticRandomGenerator.h" />
     <ClInclude Include="..\Include\Utility\StringOperation.h" />

@@ -34,17 +34,19 @@ void Chunk::setTile(size_t x, size_t y, Tile tile, size_t layer)
 		if (!haveNew)
 			return;
 		for (size_t i = m_tilemaps.size(); i < layer; i++)
+		{
 			m_tilemaps.push_back(TilemapLayer{ Tilemap::New(chunkSize, chunkSize, tileSize, tileDelta), static_cast<float>(i) - 1 });
+			m_event.send(LayerChanged{ i, LayerChanged::ChangeState::added });
+		}
 	}
 
+	auto t = m_tilemaps[layer].tilemap->getTile(x, y);
+	bool haveOld = tilesEqual(t, {});
 	m_tilemaps[layer].tilemap->setTile(x, y, tile);
 
 	//tile counting to automaticaly remove layer
 	if (layer < staticLayers)
 		return;
-
-	auto t = m_tilemaps[layer].tilemap->getTile(x, y);
-	bool haveOld = tilesEqual(t, {});
 
 	if (haveOld == haveNew)
 		return;
@@ -57,25 +59,41 @@ void Chunk::setTile(size_t x, size_t y, Tile tile, size_t layer)
 	if (layer == m_tilemaps.size() - 1 && m_tilemaps[layer].tileCount == 0)
 	{
 		while (m_tilemaps.size() > staticLayers && m_tilemaps.back().tileCount == 0)
+		{
+			m_event.send(LayerChanged{ m_tilemaps.size() - 1, LayerChanged::ChangeState::removed });
 			m_tilemaps.pop_back();
+		}
 	}
 }
 
-bool  Chunk::haveLayer(size_t layer) const
+TilemapRef Chunk::getMap(size_t layer)
+{
+	if (!haveLayer(layer))
+		return {};
+	return m_tilemaps[layer].tilemap;
+}
+
+bool Chunk::haveLayer(size_t layer) const
 {
 	return m_tilemaps.size() > layer;
 }
 
-void  Chunk::setLayerHeight(size_t layer, float height)
+void Chunk::setLayerHeight(size_t layer, float height)
 {
 	assert(haveLayer(layer));
 	m_tilemaps[layer].height = height;
+	m_event.send(LayerChanged{ layer, LayerChanged::ChangeState::heightChanged });
 }
 
-float  Chunk::layerHeight(size_t layer) const
+float Chunk::layerHeight(size_t layer) const
 {
 	assert(haveLayer(layer));
 	return m_tilemaps[layer].height;
+}
+
+size_t Chunk::layerCount() const
+{
+	return m_tilemaps.size();
 }
 
 bool Chunk::tilesEqual(const Tile & t1, const Tile & t2)

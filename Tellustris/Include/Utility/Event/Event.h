@@ -53,9 +53,9 @@ class EventHolder
 public:
 	EventHolder();
 	EventHolder(const EventHolder<T> &) = delete;
-	EventHolder(EventHolder<T> && e);
+	EventHolder(EventHolder<T> && e) noexcept;
 	EventHolder<T> & operator=(const EventHolder<T> &) = delete;
-	EventHolder<T> & operator=(EventHolder<T> && e);
+	EventHolder<T> & operator=(EventHolder<T> && e) noexcept;
 	operator bool() const;
 	bool isDisconnected() const;
 	bool isBlocked() const;

@@ -123,6 +123,12 @@
     <ClCompile Include="..\Src\GameData\Behaviours\ViewUpdaterBehaviour.cpp">
       <Filter>Fichiers sources\GameData\Behaviours</Filter>
     </ClCompile>
+    <ClCompile Include="..\Src\GameData\Behaviours\WorldRenderBehaviour.cpp">
+      <Filter>Fichiers sources\GameData\Behaviours</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\GameData\TileRenderDefinition.cpp">
+      <Filter>Fichiers sources\GameData</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Systems\AnimatorSystem.h">
@@ -208,6 +214,15 @@
     </ClInclude>
     <ClInclude Include="..\Include\Utility\Event\Args.h">
       <Filter>Fichiers d%27en-tête\Utility\Event</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\GameData\Behaviours\WorldRenderBehaviour.h">
+      <Filter>Fichiers d%27en-tête\GameData\Behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\GameData\TileRenderDefinition.h">
+      <Filter>Fichiers d%27en-tête\GameData</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Utility\FixedMatrix.h">
+      <Filter>Fichiers d%27en-tête\Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -10,19 +10,19 @@ WorldMap::WorldMap(size_t chunksX, size_t chunksY)
 
 	for(size_t y = 0 ; y < chunksY ; y++)
 		for (size_t x = 0; x < chunksX; x++)
-			m_chunks.emplace_back();
+			m_chunks.emplace_back(Chunk::New());
 }
 
 const Chunk & WorldMap::getChunk(int x, int y) const
 {
 	auto pos = worldToLocalChunkPos(x, y);
-	return m_chunks[coordToChunkIndex(pos.x, pos.y)];
+	return *m_chunks[coordToChunkIndex(pos.x, pos.y)];
 }
 
 Chunk & WorldMap::getChunk(int x, int y) 
 {
 	auto pos = worldToLocalChunkPos(x, y);
-	return m_chunks[coordToChunkIndex(pos.x, pos.y)];
+	return *m_chunks[coordToChunkIndex(pos.x, pos.y)];
 }
 
 Tile WorldMap::getTile(int x, int y, size_t layer) const
@@ -30,7 +30,7 @@ Tile WorldMap::getTile(int x, int y, size_t layer) const
 	auto chunkPos = posToChunkPos(x, y);
 	auto tilePos = posToTilePos(x, y);
 
-	return m_chunks[coordToChunkIndex(chunkPos.x, chunkPos.y)].getTile(tilePos.x, tilePos.y, layer);
+	return m_chunks[coordToChunkIndex(chunkPos.x, chunkPos.y)]->getTile(tilePos.x, tilePos.y, layer);
 }
 
 void WorldMap::setTile(int x, int y, Tile tile, size_t layer)
@@ -38,7 +38,7 @@ void WorldMap::setTile(int x, int y, Tile tile, size_t layer)
 	auto chunkPos = posToChunkPos(x, y);
 	auto tilePos = posToTilePos(x, y);
 
-	m_chunks[coordToChunkIndex(chunkPos.x, chunkPos.y)].setTile(tilePos.x, tilePos.y, tile, layer);
+	m_chunks[coordToChunkIndex(chunkPos.x, chunkPos.y)]->setTile(tilePos.x, tilePos.y, tile, layer);
 }
 
 Nz::Vector2ui WorldMap::posToChunkPos(const Nz::Vector2f & pos) const
@@ -87,6 +87,29 @@ Nz::Vector2ui WorldMap::posToTilePos(int x, int y) const
 	chunkY *= Chunk::chunkSize;
 
 	return Nz::Vector2ui(x - chunkX, y - chunkY);
+}
+
+Nz::Vector2i WorldMap::posToWorldChunkPos(const Nz::Vector2f & pos) const
+{
+	return posToWorldChunkPos(pos.x, pos.y);
+}
+
+Nz::Vector2i WorldMap::posToWorldChunkPos(float x, float y) const
+{
+	return posToWorldChunkPos(static_cast<int>(std::floor(x)), static_cast<int>(std::floor(y)));
+}
+
+Nz::Vector2i WorldMap::posToWorldChunkPos(const Nz::Vector2i & pos) const
+{
+	return posToWorldChunkPos(pos.x, pos.y);
+}
+
+Nz::Vector2i WorldMap::posToWorldChunkPos(int x, int y) const
+{
+	x = (x < 0 ? -1 : 0) + x / Chunk::chunkSize;
+	y = (y < 0 ? -1 : 0) + x / Chunk::chunkSize;
+
+	return Nz::Vector2i(x, y);
 }
 
 Nz::Vector2ui WorldMap::worldToLocalChunkPos(const Nz::Vector2i & pos) const

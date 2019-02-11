@@ -61,14 +61,14 @@ EventHolder<T>::EventHolder()
 }
 
 template<typename T>
-EventHolder<T>::EventHolder(EventHolder<T> && e)
+EventHolder<T>::EventHolder(EventHolder<T> && e) noexcept
 	: m_eventImpl(e.m_eventImpl)
 {
 	e.m_eventImpl = nullptr;
 }
 
 template<typename T>
-EventHolder<T> & EventHolder<T>::operator=(EventHolder<T> && e)
+EventHolder<T> & EventHolder<T>::operator=(EventHolder<T> && e) noexcept
 {
 	if(m_eventImpl != nullptr)
 		m_eventImpl->disconnected = true;
