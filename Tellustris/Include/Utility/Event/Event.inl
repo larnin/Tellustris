@@ -38,7 +38,7 @@ inline void Event<T>::send(const T & value)
 template <typename T>
 EventHolder<T> StaticEvent<T>::connect(const std::function<void(const T &)> & function)
 {
-	return instance().connectInstance(function);
+	return instance().connect(function);
 }
 
 template<typename T>

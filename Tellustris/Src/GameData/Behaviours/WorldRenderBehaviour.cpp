@@ -14,7 +14,7 @@ WorldRenderBehaviour::WorldRenderBehaviour(WorldMap & map, float viewSize)
 	: m_map(map)
 	, m_viewSize(viewSize)
 {
-
+	m_CenterViewUpdateHolder = StaticEvent<CenterViewUpdate>::connect([this](const auto & e) {onCenterViewUpdate(e.x, e.y); });
 }
 
 BehaviourRef WorldRenderBehaviour::clone() const
@@ -23,7 +23,7 @@ BehaviourRef WorldRenderBehaviour::clone() const
 	render->setDefaultTileDef(m_defaultTileDef);
 	for (size_t i = 0; i < m_tilesDef.size(); i++)
 		render->setTileDef(m_tilesDef[i], i);
-	return std::make_unique<WorldRenderBehaviour>(m_map, m_viewSize);
+	return std::move(render);
 }
 
 void WorldRenderBehaviour::setDefaultTileDef(TileRenderDefinitionRef def)
@@ -124,7 +124,7 @@ std::vector<Nz::Vector2i> WorldRenderBehaviour::getViewChunks(float x, float y)
 
 	std::vector<Nz::Vector2i> chunks;
 	for (int i = min.x; i <= max.x; i++)
-		for (int j = min.y; j < max.y; j++)
+		for (int j = min.y; j <= max.y; j++)
 			chunks.push_back({ i, j });
 
 	return chunks;
@@ -160,7 +160,7 @@ void WorldRenderBehaviour::addNewLayer(int x, int y, size_t layer)
 	auto it = std::find_if(m_chunkInfos.begin(), m_chunkInfos.end(), [x, y](const auto & c) {return c.x == x && c.y == y; });
 	assert(it != m_chunkInfos.end());
 
-	assert(it->layers.size() == layer - 1);
+	assert(it->layers.size() == layer);
 
 	auto w = getEntity()->GetWorld();
 
@@ -168,10 +168,10 @@ void WorldRenderBehaviour::addNewLayer(int x, int y, size_t layer)
 	auto & node = entity->AddComponent<Ndk::NodeComponent>();
 	auto & graph = entity->AddComponent<Ndk::GraphicsComponent>();
 	auto & map = entity->AddComponent<TilemapComponent>();
-	auto & mapAnimation = entity->AddComponent<TilemapAnimationComponent>();
-	auto & mapCollisions = entity->AddComponent<TilemapColliderComponent>();
+	//auto & mapAnimation = entity->AddComponent<TilemapAnimationComponent>();
+	//auto & mapCollisions = entity->AddComponent<TilemapColliderComponent>();
 
-	node.SetPosition(Nz::Vector3f(static_cast<float>(x), static_cast<float>(y), it->chunk->layerHeight(layer)));
+	node.SetPosition(Nz::Vector3f(static_cast<float>(x) * Chunk::chunkSize, static_cast<float>(y) * Chunk::chunkSize, it->chunk->layerHeight(layer)));
 
 	auto tilemap = Nz::TileMap::New(Nz::Vector2ui(Chunk::chunkSize, Chunk::chunkSize), Nz::Vector2f(1, 1));
 	auto tilemapDef = Tilemap::New(Chunk::chunkSize, Chunk::chunkSize, Chunk::tileSize, Chunk::tileDelta);
@@ -181,22 +181,22 @@ void WorldRenderBehaviour::addNewLayer(int x, int y, size_t layer)
 
 	auto mat = Nz::Material::New("Translucent3D");
 	mat->EnableDepthWrite(true);
-	mat->SetDiffuseMap("Img/tile2.png");
+	mat->SetDiffuseMap("Img/tile3.png");
 	tilemap->SetMaterial(0, mat);
 
 	graph.Attach(tilemap);
 	map.attachTilemap(tilemapDef);
 	map.attachRenderer(tilemap);
-	mapAnimation.attachTilemap(tilemapDef);
-	mapAnimation.attachRenderer(tilemap);
+	//mapAnimation.attachTilemap(tilemapDef);
+	//mapAnimation.attachRenderer(tilemap);
 	//mapAnimation.attachAnimations(....);
-	mapCollisions.attachTilemap(tilemapDef);
+	//mapCollisions.attachTilemap(tilemapDef);
 
 	ChunkLayerInfo infos{ tilemapDef, entity };
 	infos.mapModifiedHolder = it->chunk->getMap(layer)->registerTilemapModifiedCallback([this, x, y, layer](const auto & t) {onTileUpdate(x, y, layer, t.x, t.y); });
 	it->layers.push_back(std::move(infos));
 
-	drawLayer(tilemapDef, x * Chunk::chunkSize, y * Chunk::chunkSize, layer);
+	drawLayer(tilemapDef, x * static_cast<int>(Chunk::chunkSize), y * static_cast<int>(Chunk::chunkSize), layer);
 }
 
 void WorldRenderBehaviour::removeLayer(int x, int y, size_t layer)
@@ -204,7 +204,7 @@ void WorldRenderBehaviour::removeLayer(int x, int y, size_t layer)
 	auto it = std::find_if(m_chunkInfos.begin(), m_chunkInfos.end(), [x, y](const auto & c) {return c.x == x && c.y == y; });
 	assert(it != m_chunkInfos.end());
 
-	assert(it->layers.size() == layer);
+	assert(it->layers.size() == layer + 1);
 
 	it->layers[layer].entity->Kill();
 	it->layers.erase(it->layers.begin() + layer);
@@ -229,24 +229,64 @@ void WorldRenderBehaviour::drawLayer(TilemapRef map, int x, int y, size_t layer)
 	if (!def)
 		def = m_defaultTileDef;
 
-	for(int i = 0 ; i < map->width() ; i++)
-		for (int j = 0; j < map->height(); j++)
+	auto centerPos = m_map.posToWorldChunkPos(x, y);
+
+	FixedMatrix<Chunk*, 3, 3> chunks(nullptr);
+	for (int i = -1; i <= 1; i++)
+		for (int j = -1; j <= 1; j++)
+			chunks(i + 1, j + 1) = &m_map.getChunk(centerPos.x + i, centerPos.y + j);
+
+	Matrix<Tile> tiles(Chunk::chunkSize + 2, Chunk::chunkSize + 2, {});
+	for(int i = 0 ; i < tiles.width() ; i++)
+		for (int j = 0; j < tiles.height(); j++)
+		{
+			int x = i - 1;
+			int y = j - 1;
+			auto cX = 1;
+			auto cY = 1;
+			if (x < 0)
+			{
+				x = Chunk::chunkSize - 1;
+				cX = 0;
+			}
+			else if (x >= Chunk::chunkSize)
+			{
+				x = 0;
+				cX = 2;
+			}
+			if (y < 0)
+			{
+				y = Chunk::chunkSize - 1;
+				cY = 0;
+			}
+			else if (y >= Chunk::chunkSize)
+			{
+				y = 0;
+				cY = 2;
+			}
+			auto * c = chunks(cX, cY);
+
+			tiles(i, j) = c->getTile(x, y, layer);
+		}
+
+	for(size_t i = 0 ; i < map->width() ; i++)
+		for (size_t j = 0; j < map->height(); j++)
 		{
 			if (!def)
-				map->setTile(i, j, m_map.getTile(x + i, y + j, layer));
+				map->setTile(i, j, tiles(i + 1, j + 1));
 			else
 			{
 				LocalTileMatrix mat;
-				mat(0, 0) = m_map.getTile(x + i - 1, y + j - 1, layer);
-				mat(0, 1) = m_map.getTile(x + i - 1, y + j, layer);
-				mat(0, 2) = m_map.getTile(x + i - 1, y + j + 1, layer);
-				mat(1, 0) = m_map.getTile(x + i, y + j - 1, layer);
-				mat(1, 1) = m_map.getTile(x + i, y + j, layer);
-				mat(1, 2) = m_map.getTile(x + i, y + j + 1, layer);
-				mat(2, 0) = m_map.getTile(x + i + 1, y + j - 1, layer);
-				mat(2, 1) = m_map.getTile(x + i + 1, y + j, layer);
-				mat(2, 2) = m_map.getTile(x + i + 1, y + j + 1, layer);
-				map->setTile(i, j, def->renderTile(mat, x + i, y + j));
+				mat(0, 0) = tiles(i, j);
+				mat(0, 1) = tiles(i, j + 1);
+				mat(0, 2) = tiles(i, j + 2);
+				mat(1, 0) = tiles(i + 1, j);
+				mat(1, 1) = tiles(i + 1, j + 1);
+				mat(1, 2) = tiles(i + 1, j + 2);
+				mat(2, 0) = tiles(i + 2, j);
+				mat(2, 1) = tiles(i + 2, j + 1);
+				mat(2, 2) = tiles(i + 2, j + 2);
+				map->setTile(i, j, def->renderTile(mat, x + static_cast<int>(i), y + static_cast<int>(j)));
 			}
 		}
 }

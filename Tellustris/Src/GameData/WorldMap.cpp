@@ -68,10 +68,7 @@ Nz::Vector2ui WorldMap::posToChunkPos(const Nz::Vector2i & pos) const
 
 Nz::Vector2ui WorldMap::posToChunkPos(int x, int y) const
 {
-	x = (x < 0 ? -1 : 0) + x / Chunk::chunkSize;
-	y = (y < 0 ? -1 : 0) + x / Chunk::chunkSize;
-
-	return worldToLocalChunkPos(x, y);
+	return worldToLocalChunkPos(posToWorldChunkPos(x, y));
 }
 
 Nz::Vector2ui WorldMap::posToTilePos(const Nz::Vector2i & pos) const
@@ -81,10 +78,10 @@ Nz::Vector2ui WorldMap::posToTilePos(const Nz::Vector2i & pos) const
 
 Nz::Vector2ui WorldMap::posToTilePos(int x, int y) const
 {
-	int chunkX = (x < 0 ? -1 : 0) + x / Chunk::chunkSize;
-	int chunkY = (y < 0 ? -1 : 0) + y / Chunk::chunkSize;
-	chunkX *= Chunk::chunkSize;
-	chunkY *= Chunk::chunkSize;
+	int chunkX = ((x < 0 ? -static_cast<int>(Chunk::chunkSize) + 1 : 0) + x) / static_cast<int>(Chunk::chunkSize);
+	int chunkY = ((y < 0 ? -static_cast<int>(Chunk::chunkSize) + 1 : 0) + y) / static_cast<int>(Chunk::chunkSize);
+	chunkX *= static_cast<int>(Chunk::chunkSize);
+	chunkY *= static_cast<int>(Chunk::chunkSize);
 
 	return Nz::Vector2ui(x - chunkX, y - chunkY);
 }
@@ -106,8 +103,8 @@ Nz::Vector2i WorldMap::posToWorldChunkPos(const Nz::Vector2i & pos) const
 
 Nz::Vector2i WorldMap::posToWorldChunkPos(int x, int y) const
 {
-	x = (x < 0 ? -1 : 0) + x / Chunk::chunkSize;
-	y = (y < 0 ? -1 : 0) + x / Chunk::chunkSize;
+	x = ((x < 0 ? -static_cast<int>(Chunk::chunkSize) + 1 : 0) + x) / static_cast<int>(Chunk::chunkSize);
+	y = ((y < 0 ? -static_cast<int>(Chunk::chunkSize) + 1 : 0) + y) / static_cast<int>(Chunk::chunkSize);
 
 	return Nz::Vector2i(x, y);
 }
@@ -120,11 +117,11 @@ Nz::Vector2ui WorldMap::worldToLocalChunkPos(const Nz::Vector2i & pos) const
 Nz::Vector2ui WorldMap::worldToLocalChunkPos(int x, int y) const
 {
 	if (x < 0)
-		x = static_cast<int>(m_width) - x % m_width;
+		x = static_cast<int>(m_width) + (x + 1) % static_cast<int>(m_width) - 1;
 	else x %= m_width;
 
 	if (y < 0)
-		y = static_cast<int>(m_height) - y % m_height;
+		y = static_cast<int>(m_height) + (y + 1) % static_cast<int>(m_height) - 1;
 	else y %= m_height;
 
 	return Nz::Vector2ui(x, y);
