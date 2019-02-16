@@ -178,6 +178,7 @@
     <ClInclude Include="..\Include\Utility\Expression\ExpressionParser.h" />
     <ClInclude Include="..\Include\Utility\Expression\ExpressionValue.h" />
     <ClInclude Include="..\Include\Utility\FixedMatrix.h" />
+    <ClInclude Include="..\Include\Utility\Json.h" />
     <ClInclude Include="..\Include\Utility\Matrix.h" />
     <ClInclude Include="..\Include\Utility\Ressource.h" />
     <ClInclude Include="..\Include\Utility\StaticRandomGenerator.h" />

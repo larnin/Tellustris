@@ -227,6 +227,9 @@
     <ClInclude Include="..\Include\Utility\Ressource.h">
       <Filter>Fichiers d%27en-tête\Utility</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Utility\Json.h">
+      <Filter>Fichiers d%27en-tête\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Include\Utility\Expression\ExpressionParser.inl">
