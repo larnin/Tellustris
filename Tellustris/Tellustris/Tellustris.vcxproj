@@ -179,6 +179,7 @@
     <ClInclude Include="..\Include\Utility\Expression\ExpressionValue.h" />
     <ClInclude Include="..\Include\Utility\FixedMatrix.h" />
     <ClInclude Include="..\Include\Utility\Matrix.h" />
+    <ClInclude Include="..\Include\Utility\Ressource.h" />
     <ClInclude Include="..\Include\Utility\StaticRandomGenerator.h" />
     <ClInclude Include="..\Include\Utility\StringOperation.h" />
   </ItemGroup>

@@ -29,6 +29,8 @@
 #include <iostream>
 #include <random>
 
+#include "Utility/Ressource.h"
+
 //int main()
 //{
 //	Ndk::Application application;
@@ -328,9 +330,11 @@ int main()
 							c.setTile(x, y, Tile{ i + j * 2 + 1,{} }, 0);
 				}
 
+			Ressource<Tilemap>::add("test", map.getChunk(0, 0).getMap(0));
+
 			mapEntity->AddComponent<Ndk::NodeComponent>();
 			auto & behaviour = mapEntity->AddComponent<BehaviourComponent>();
-			behaviour.attach(std::make_unique<WorldRenderBehaviour>(map, 20));
+			behaviour.attach(std::make_unique<WorldRenderBehaviour>(map, 20.f));
 		}
 
 		auto & playerNode = player->GetComponent<Ndk::NodeComponent>();
