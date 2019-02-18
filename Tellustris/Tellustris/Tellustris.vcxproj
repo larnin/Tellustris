@@ -137,6 +137,7 @@
     <ClCompile Include="..\Src\GameData\Behaviours\ViewUpdaterBehaviour.cpp" />
     <ClCompile Include="..\Src\GameData\Behaviours\WorldRenderBehaviour.cpp" />
     <ClCompile Include="..\Src\GameData\Chunk.cpp" />
+    <ClCompile Include="..\Src\GameData\LoadRessources.cpp" />
     <ClCompile Include="..\Src\GameData\TileRenderDefinition.cpp" />
     <ClCompile Include="..\Src\GameData\WorldMap.cpp" />
     <ClCompile Include="..\Src\InitSystemsAndComponents.cpp" />
@@ -161,6 +162,7 @@
     <ClInclude Include="..\Include\GameData\Behaviours\ViewUpdaterBehaviour.h" />
     <ClInclude Include="..\Include\GameData\Behaviours\WorldRenderBehaviour.h" />
     <ClInclude Include="..\Include\GameData\Chunk.h" />
+    <ClInclude Include="..\Include\GameData\LoadRessources.h" />
     <ClInclude Include="..\Include\GameData\TileRenderDefinition.h" />
     <ClInclude Include="..\Include\GameData\WorldMap.h" />
     <ClInclude Include="..\Include\InitSystemsAndComponents.h" />

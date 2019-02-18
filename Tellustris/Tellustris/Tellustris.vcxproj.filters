@@ -129,6 +129,9 @@
     <ClCompile Include="..\Src\GameData\TileRenderDefinition.cpp">
       <Filter>Fichiers sources\GameData</Filter>
     </ClCompile>
+    <ClCompile Include="..\Src\GameData\LoadRessources.cpp">
+      <Filter>Fichiers sources\GameData</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Systems\AnimatorSystem.h">
@@ -229,6 +232,9 @@
     </ClInclude>
     <ClInclude Include="..\Include\Utility\Json.h">
       <Filter>Fichiers d%27en-tête\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\GameData\LoadRessources.h">
+      <Filter>Fichiers d%27en-tête\GameData</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

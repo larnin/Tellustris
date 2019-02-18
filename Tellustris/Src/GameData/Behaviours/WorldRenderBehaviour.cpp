@@ -3,6 +3,7 @@
 #include "Components/TilemapComponent.h"
 #include "Components/TilemapColliderComponent.h"
 #include "Components/TilemapAnimationComponent.h"
+#include "Utility/Ressource.h"
 
 #include <NDK/World.hpp>
 #include <NDK/Components/NodeComponent.hpp>
@@ -181,7 +182,7 @@ void WorldRenderBehaviour::addNewLayer(int x, int y, size_t layer)
 
 	auto mat = Nz::Material::New("Translucent3D");
 	mat->EnableDepthWrite(true);
-	mat->SetDiffuseMap("Img/tile3.png");
+	mat->SetDiffuseMap(Ressource<Nz::Texture>::get("Img/tile3.png"));
 	tilemap->SetMaterial(0, mat);
 
 	graph.Attach(tilemap);

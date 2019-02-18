@@ -27,6 +27,11 @@ public:
 			m_ressources.erase(it);
 	}
 
+	static void clear()
+	{
+		m_ressources.clear();
+	}
+
 	static bool have(const std::string & name)
 	{
 		return m_ressources.find(name) != m_ressources.end();
