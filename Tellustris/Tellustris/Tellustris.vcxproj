@@ -149,6 +149,7 @@
     <ClCompile Include="..\Src\Tilemap\Tilemap.cpp" />
     <ClCompile Include="..\Src\Tilemap\TilemapAnimations.cpp" />
     <ClCompile Include="..\Src\Utility\Event\WindowEventsHolder.cpp" />
+    <ClCompile Include="..\Src\Utility\Perlin.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Animator\Animation.h" />
@@ -182,6 +183,8 @@
     <ClInclude Include="..\Include\Utility\FixedMatrix.h" />
     <ClInclude Include="..\Include\Utility\Json.h" />
     <ClInclude Include="..\Include\Utility\Matrix.h" />
+    <ClInclude Include="..\Include\Utility\Perlin.h" />
+    <ClInclude Include="..\Include\Utility\RandomHash.h" />
     <ClInclude Include="..\Include\Utility\Ressource.h" />
     <ClInclude Include="..\Include\Utility\StaticRandomGenerator.h" />
     <ClInclude Include="..\Include\Utility\StringOperation.h" />
