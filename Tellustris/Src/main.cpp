@@ -30,6 +30,7 @@
 
 #include <iostream>
 #include <random>
+#include <chrono>
 
 #include "Utility/Ressource.h"
 
@@ -369,27 +370,38 @@ int main()
 		
 	InitializeSystemsAndComponents();
 
-	const size_t size = 1000;
+	const size_t size = 2000;
 
 	auto img = Nz::Image::New(Nz::ImageType::ImageType_2D, Nz::PixelFormatType::PixelFormatType_RGBA8, size, size);
 
-	Perlin perlin1(size / 4, 1.f / 2, 5, 5);
-	Perlin perlin2(size / 4, 1.f / 4, 10, 6);
-	Perlin perlin3(size / 4, 1.f / 8, 20, 7);
-	Perlin perlin4(size / 4, 1.f / 16, 40, 8);
-	Perlin perlin5(size / 4, 1.f / 32, 80, 9);
-	Perlin perlin6(size / 4, 1.f / 64, 160, 10);
+	std::chrono::time_point<std::chrono::system_clock> start, end;
+	start = std::chrono::system_clock::now();
+
+	Perlin2D perlin1(size / 4, 1.f / 2, 5, 5);
+	Perlin2D perlin2(size / 4, 1.f / 4, 10, 6);
+	Perlin2D perlin3(size / 4, 1.f / 8, 20, 7);
+	Perlin2D perlin4(size / 4, 1.f / 16, 40, 8);
+	Perlin2D perlin5(size / 4, 1.f / 32, 80, 9);
+	Perlin2D perlin6(size / 4, 1.f / 64, 160, 10);
 
 	for(int i = 0 ; i < size; i++)
 		for (int j = 0; j < size; j++)
 		{
-			float v = 0.5f + (perlin1(i, j) + perlin2(i, j) + perlin3(i, j) + perlin4(i, j) + perlin5(i, j) + perlin6(i, j)) / 1.2f;
+			float v = 0.5f + (perlin1(i, j) +perlin2(i, j) + perlin3(i, j) + perlin4(i, j) + perlin5(i, j) + perlin6(i, j)) / 1.2f;
 			v = v < 0 ? 0 : v;
 			v = v > 1 ? 1 : v;
 
 			img->SetPixelColor(Nz::Color(v * 255, v * 255, v * 255), i, j);
 		}
 
+	end = std::chrono::system_clock::now();
+
+	int elapsedms = std::chrono::duration_cast<std::chrono::milliseconds>(end - start).count();
+
+	std::cout << "elapsed time: " << elapsedms << "ms\n";
+
 	img->SaveToFile("img.png");
+
+	std::getchar();
 
 }
