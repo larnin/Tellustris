@@ -54,7 +54,7 @@ void TileDefinition::addTile(size_t materialID, TileConnexionType connexion, con
 	while (materialID >= m_materials.size())
 		m_materials.push_back({});
 
-	auto & tile = m_materials[materialID][static_cast<size_t>(connexion)];
+	auto & tile = m_materials[materialID].tiles[static_cast<size_t>(connexion)];
 	auto it = std::find_if(tile.begin(), tile.end(), [def](const auto & t) {return t.textureID == def.textureID && t.tileID == def.tileID; });
 
 	if (it != tile.end())
@@ -71,7 +71,15 @@ const std::vector<SingleTileDefinition> & TileDefinition::getTile(size_t materia
 {
 	if (materialID >= m_materials.size())
 		return {};
-	return m_materials[materialID][static_cast<size_t>(connexions)];
+	return m_materials[materialID].tiles[static_cast<size_t>(connexions)];
+}
+
+void TileDefinition::addAllowedLayers(size_t materialID, size_t min, size_t max)
+{
+	while (materialID >= m_materials.size())
+		m_materials.push_back({});
+
+	m_materials[materialID].allowedLayers.push_back(TileMaterialLayers{ min, max });
 }
 
 size_t TileDefinition::materialCount() const
@@ -84,14 +92,14 @@ void TileDefinition::clearMaterials()
 	m_materials.clear();
 }
 
-std::vector<size_t> TileDefinition::texturesIndexsForMaterial(size_t materialID)
+std::vector<size_t> TileDefinition::texturesIndexsForMaterial(size_t materialID) const
 {
 	if (materialID >= m_materials.size())
 		return {};
 
 	std::vector<size_t> indexs;
 
-	for (const auto & tiles : m_materials[materialID])
+	for (const auto & tiles : m_materials[materialID].tiles)
 		for (const auto & t : tiles)
 		{
 			if (t.tileID == 0)
@@ -100,4 +108,16 @@ std::vector<size_t> TileDefinition::texturesIndexsForMaterial(size_t materialID)
 				indexs.push_back(t.textureID);
 		}
 	return indexs;
+}
+
+bool TileDefinition::isMaterialAllowedOnLayer(size_t materialID, size_t layer) const
+{
+	if (materialID >= m_materials.size())
+		return false;
+
+	const auto & mat = m_materials[materialID];
+	for (const auto & allow : mat.allowedLayers)
+		if (allow.min <= layer && allow.max >= layer)
+			return true;
+	return false;
 }

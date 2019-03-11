@@ -23,7 +23,17 @@ struct SingleTileDefinition
 	float weight = 0;
 };
 
-using TileMaterialDefinition = std::array<std::vector<SingleTileDefinition>, static_cast<unsigned int>(TileConnexionType::Max) + 1>;
+struct TileMaterialLayers
+{
+	size_t min = 0;
+	size_t max = 0;
+};
+
+struct TileMaterialDefinition
+{
+	std::array<std::vector<SingleTileDefinition>, static_cast<unsigned int>(TileConnexionType::Max) + 1> tiles;
+	std::vector<TileMaterialLayers> allowedLayers;
+};
 
 class TileDefinition : public Nz::RefCounted
 {
@@ -40,9 +50,10 @@ public:
 	void addTile(size_t materialID, TileConnexionType connexion, const SingleTileDefinition & def);
 	void addTile(size_t materialID, TileConnexionType connexion, size_t tileID, size_t textureID = 0, float weight = 1);
 	const std::vector<SingleTileDefinition> & getTile(size_t materialID, TileConnexionType connexions) const;
+	void addAllowedLayers(size_t materialID, size_t min, size_t max);
 	
 	template <typename Gen>
-	SingleTileDefinition getRandomTime(size_t materialID, TileConnexionType connexions, Gen gen)
+	SingleTileDefinition getRandomTile(size_t materialID, TileConnexionType connexions, Gen gen) const
 	{
 		auto & tiles = getTile(materialID, connexions);
 		if (tiles.empty())
@@ -55,7 +66,8 @@ public:
 
 	size_t materialCount() const;
 	void clearMaterials();
-	std::vector<size_t> texturesIndexsForMaterial(size_t materialID);
+	std::vector<size_t> texturesIndexsForMaterial(size_t materialID) const;
+	bool isMaterialAllowedOnLayer(size_t materialID, size_t layer) const;
 
 	template<typename... Args> static TileDefinitionRef New(Args&&... args)
 	{

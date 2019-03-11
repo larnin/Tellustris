@@ -7,6 +7,7 @@
 #include "Tilemap/Tilemap.h"
 
 #include <Nazara/Renderer/Texture.hpp>
+#include <Nazara/Graphics/Material.hpp>
 
 #include <filesystem>
 #include <fstream>
@@ -22,11 +23,14 @@ void RessourceLoader::loadAll(const std::string & path)
 {
 	loadDirectoryRessources(path, "");
 	FixLinksAfterLoad();
+
+	initializeMaterials();
 }
 
 void RessourceLoader::unloadAll()
 {
 	Ressource<Nz::Texture>::clear();
+	Ressource<Nz::Material>::clear();
 	Ressource<Animator>::clear();
 	Ressource<Animation>::clear();
 	Ressource<Tilemap>::clear();
@@ -207,5 +211,16 @@ bool RessourceLoader::loadTilemap(const std::string & path, const std::string & 
 			tilemap->setTile(i, j, Tile{ t["id"].get<unsigned int>(), t["c"].get<unsigned int>() });
 		}
 
-	return false;
+	Ressource<Tilemap>::add(filename, tilemap);
+
+	return true;
+}
+
+
+void RessourceLoader::initializeMaterials()
+{
+	auto mat = Nz::Material::New("Translucent3D");
+	mat->EnableDepthWrite(true);
+
+	Ressource<Nz::Material>::add("default", mat);
 }

@@ -32,5 +32,7 @@ private:
 	static bool loadAnimator(const std::string & path, const std::string & filename);
 	static bool loadTilemap(const std::string & path, const std::string & filename);
 
+	static void initializeMaterials();
+
 	static std::vector<AnimatorLink> m_animatorLinks;
 };
