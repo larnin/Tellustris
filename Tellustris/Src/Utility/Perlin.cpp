@@ -56,6 +56,23 @@ float Perlin::operator()(float x, float y, float z) const
 	return cos3DLerp(v1, v2, v3, v4, v5, v6, v7, v8, decX, decY, decZ);
 }
 
+Perlin::SplitOut Perlin::splitValue2(float value, size_t size, size_t frequence)
+{
+	SplitOut out;
+
+	int f = static_cast<int>(frequence);
+	float x = value / size * f;
+
+	out.dec = x - std::floor(x);
+
+	int intValue = static_cast<int>(std::floor(x));
+	int chunk = ((intValue < 0 ? -f + 1 : 0) + intValue) / f;
+	out.x1 = intValue - chunk * f;
+	out.x2 = out.x1 < f - 1 ? out.x1 + 1 : 0;
+
+	return out;
+}
+
 void Perlin::splitValue(float value, size_t size, size_t frequence, size_t & outX1, size_t & outX2, float & outDec)
 {
 	int f = static_cast<int>(frequence);
@@ -83,10 +100,13 @@ Perlin2D::Perlin2D(size_t size, float amplitude, size_t frequence, size_t seed)
 
 float Perlin2D::operator()(float x, float y) const
 {
-	float decX, decY;
+	/*float decX, decY;
 	size_t x1, x2, y1, y2;
 	Perlin::splitValue(x, m_size, m_frequence, x1, x2, decX);
-	Perlin::splitValue(y, m_size, m_frequence, y1, y2, decY);
+	Perlin::splitValue(y, m_size, m_frequence, y1, y2, decY);*/
+
+	auto [x1, x2, decX] = Perlin::splitValue2(x, m_size, m_frequence);
+	auto [y1, y2, decY] = Perlin::splitValue2(y, m_size, m_frequence);
 
 	float v1 = m_data[x1 + y1 * m_frequence];
 	float v2 = m_data[x2 + y1 * m_frequence];

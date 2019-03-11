@@ -41,6 +41,58 @@ void WorldMap::setTile(int x, int y, Tile tile, size_t layer)
 	m_chunks[coordToChunkIndex(chunkPos.x, chunkPos.y)]->setTile(tilePos.x, tilePos.y, tile, layer);
 }
 
+Matrix<Tile> WorldMap::getTiles(int x, int y, int width, int height, size_t layer) const
+{
+	assert(width > 0);
+	assert(height > 0);
+
+	auto minChunk = posToWorldChunkPos(x, y);
+	auto maxChunk = posToWorldChunkPos(x + width, y + height);
+
+	Matrix<Tile> tiles(width, height);
+
+	for (int i = minChunk.x; i <= maxChunk.x; i++)
+	{
+		for (int j = minChunk.y; j <= maxChunk.y; j++)
+		{
+			auto minPos = tilePosToPos(0u, 0u, i, j);
+			auto maxPos = tilePosToPos(static_cast<unsigned int>(Chunk::chunkSize - 1), static_cast<unsigned int>(Chunk::chunkSize - 1), i, j);
+
+			Nz::Vector2ui cMin(0, 0);
+			Nz::Vector2ui cMax(Chunk::chunkSize - 1, Chunk::chunkSize - 1);
+
+			Nz::Vector2ui tilesMin(0, 0);
+
+			if (minPos.x < x)
+				cMin.x = minPos.x - x;
+			else
+			{
+				cMin.x = 0;
+				tilesMin.x = x - minPos.x;
+			}
+			if (minPos.y < y)
+				cMin.y = minPos.y - y;
+			else
+			{
+				cMin.y = 0;
+				tilesMin.y = y - minPos.y;
+			}
+			if (static_cast<int>(cMax.x - cMin.x + 1) > width)
+				cMax.x = width + cMin.x - 1;
+			if (static_cast<int>(cMax.y - cMin.y + 1) > height)
+				cMax.y = height + cMin.y - 1;
+
+			auto& chunk = getChunk(i, j);
+
+			for (unsigned int k = 0; k <= cMax.x - cMin.x; k++)
+				for (unsigned int l = 0; l <= cMax.y - cMin.y; l++)
+					tiles(k + tilesMin.x, l + tilesMin.y) = chunk.getTile(cMin.x + k, cMin.y + l, layer);
+		}
+	}
+
+	return tiles;
+}
+
 Nz::Vector2ui WorldMap::posToChunkPos(const Nz::Vector2f & pos) const
 {
 	return posToChunkPos(pos.x, pos.y);

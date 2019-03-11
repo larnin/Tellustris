@@ -14,6 +14,15 @@ public:
 	float operator()(float x, float y) const;
 	float operator()(float x, float y, float z) const;
 
+	struct SplitOut
+	{
+		size_t x1;
+		size_t x2;
+		float dec;
+	};
+
+
+	static SplitOut splitValue2(float value, size_t size, size_t frequence);
 	static void splitValue(float value, size_t size, size_t frequence, size_t & outX1, size_t & outX2, float & outDec);
 
 private:

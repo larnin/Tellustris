@@ -17,6 +17,7 @@ public:
 
 	Tile getTile(int x, int y, size_t layer) const;
 	void setTile(int x, int y, Tile tile, size_t layer);
+	Matrix<Tile> getTiles(int x, int y, int width, int height, size_t layer) const;
 	
 	//world tile coordinate to definition chunk coordinate
 	Nz::Vector2ui posToChunkPos(const Nz::Vector2f & pos) const;
