@@ -13,16 +13,18 @@
 
 class WorldRenderBehaviour2;
 
-class ChunkRenderBehaviour : public Behaviour
+class ChunkGroundRenderBehaviour : public Behaviour
 {
 	struct TilemapInfos
 	{
 		Nz::TileMapRef tilemap;
 		std::vector<size_t> texturesIndexs;
+		size_t materialIndex;
+		size_t setTilesCount;
 	};
 
 public:
-	ChunkRenderBehaviour(Chunk & chunk, WorldMap & map, WorldRenderBehaviour2 & worldRender, int chunkX, int chunkY, TileDefinitionRef definition);
+	ChunkGroundRenderBehaviour(Chunk & chunk, WorldMap & map, WorldRenderBehaviour2 & worldRender, int chunkX, int chunkY, TileDefinitionRef definition);
 
 	BehaviourRef clone() const override;
 
@@ -36,12 +38,17 @@ private:
 	void onLayerChange(size_t layer, Chunk::LayerChanged::ChangeState state);
 	void onMapChange(size_t layer, size_t x, size_t y);
 
-	void onLayerAdd(size_t layer);
-	void onLayerRemove(size_t layer);
-	void onTileChange(size_t x, size_t y, size_t layer);
-	void onFullMapChange(size_t layer);
+	void onLayerAdd();
+	void onLayerRemove();
+	void onTileChange(size_t x, size_t y);
+	void onFullMapChange();
 
+	void setTile(size_t mat, TileConnexionType type, unsigned int x, unsigned int y);
 	void drawTile(TilemapInfos & map, unsigned int x, unsigned int y, size_t id, size_t textureIndex);
+
+	void updateMaterialsHeights();
+
+	void fillOldTiles();
 
 	Chunk & m_chunk;
 	WorldMap & m_map;
@@ -52,5 +59,7 @@ private:
 	std::vector<TilemapInfos> m_tilemaps;
 
 	EventHolder<Chunk::LayerChanged> m_layerChangedHolder;
-	std::vector<EventHolder<Tilemap::TilemapModified>> m_mapModified;
+	EventHolder<Tilemap::TilemapModified> m_mapModified;
+
+	Matrix<size_t> m_oldTiles;
 };

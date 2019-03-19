@@ -147,6 +147,9 @@
     <ClCompile Include="..\Src\GameData\TileRenderDefinition.cpp">
       <Filter>Fichiers sources\GameData</Filter>
     </ClCompile>
+    <ClCompile Include="..\Src\GameData\Behaviours\ChunkGroundRenderBehaviour.cpp">
+      <Filter>Fichiers sources\GameData\Behaviours</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Systems\AnimatorSystem.h">
@@ -268,6 +271,9 @@
     </ClInclude>
     <ClInclude Include="..\Include\GameData\TileRenderDefinition.h">
       <Filter>Fichiers d%27en-tête\GameData</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\GameData\Behaviours\ChunkGroundRenderBehaviour.h">
+      <Filter>Fichiers d%27en-tête\GameData\Behaviours</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

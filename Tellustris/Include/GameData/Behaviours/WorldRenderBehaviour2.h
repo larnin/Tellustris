@@ -10,18 +10,47 @@
 
 #include <vector>
 
+class ChunkRenderBehaviour;
+class ChunkGroundRenderBehaviour;
+
 class WorldRenderBehaviour2 : public Behaviour
 {
 	struct ChunkInfo
 	{
 		Ndk::EntityHandle entity;
+		ChunkRenderBehaviour * behaviour;
+		Ndk::EntityHandle groundEntity;
+		ChunkGroundRenderBehaviour * groundBehaviour;
 		int x;
 		int y;
+	};
+
+	class ChunkBorder
+	{
+	public:
+		ChunkBorder(Chunk & chunk, WorldRenderBehaviour2 & render, int chunkX, int chunkY);
+		ChunkBorder(const ChunkBorder & border);
+
+	private:
+		void onLayerChange(size_t layer, Chunk::LayerChanged::ChangeState state);
+		void onMapChange(size_t layer, size_t x, size_t y);
+		void onLayerAdd(size_t layer);
+		void onLayerRemove(size_t layer);
+
+		Chunk & m_chunk;
+		WorldRenderBehaviour2 & m_worldRender;
+		int m_chunkX;
+		int m_chunkY;
+
+		EventHolder<Chunk::LayerChanged> m_layerChangedHolder;
+		std::vector<EventHolder<Tilemap::TilemapModified>> m_mapModified;
 	};
 
 public:
 	WorldRenderBehaviour2(WorldMap & map, TileDefinitionRef definition, float viewSize);
 	BehaviourRef clone() const override;
+
+	void onBoderBlockUpdate(size_t chunkX, size_t chunkY, size_t x, size_t y, size_t layer);
 
 protected:
 	void onEnable() override;

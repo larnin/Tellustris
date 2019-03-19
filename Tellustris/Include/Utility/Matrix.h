@@ -63,6 +63,9 @@ public:
 
 	void resize(size_t newWidth, size_t newHeight, T defaultValue = T())
 	{
+		if (m_width == newWidth && m_height == newHeight)
+			return;
+
 		Matrix m(newWidth, newHeight, defaultValue);
 
 		for (unsigned int i(0); i < std::min(m_width, newWidth); i++)
