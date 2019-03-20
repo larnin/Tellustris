@@ -44,11 +44,11 @@ private:
 	void onFullMapChange();
 
 	void setTile(size_t mat, TileConnexionType type, unsigned int x, unsigned int y);
+	void clearTile(unsigned int x, unsigned int y);
+	void cleanLayers();
 	void drawTile(TilemapInfos & map, unsigned int x, unsigned int y, size_t id, size_t textureIndex);
 
 	void updateMaterialsHeights();
-
-	void fillOldTiles();
 
 	Chunk & m_chunk;
 	WorldMap & m_map;
@@ -60,6 +60,4 @@ private:
 
 	EventHolder<Chunk::LayerChanged> m_layerChangedHolder;
 	EventHolder<Tilemap::TilemapModified> m_mapModified;
-
-	Matrix<size_t> m_oldTiles;
 };

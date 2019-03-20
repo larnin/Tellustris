@@ -15,7 +15,6 @@ ChunkGroundRenderBehaviour::ChunkGroundRenderBehaviour(Chunk & chunk, WorldMap &
 	, m_chunkX(chunkX)
 	, m_chunkY(chunkY)
 	, m_definition(definition)
-	, m_oldTiles(Chunk::chunkSize, Chunk::chunkSize)
 {
 	m_layerChangedHolder = chunk.registerLayerChangedCallback([this](const auto & layerChanged) {onLayerChange(layerChanged.layer, layerChanged.state); });
 
@@ -39,17 +38,30 @@ void ChunkGroundRenderBehaviour::onBoderBlockUpdate(size_t x, size_t y, size_t l
 	auto chunkPos = m_map.worldToLocalChunkPos(m_chunkX, m_chunkY);
 	auto pos = m_map.tilePosToPos(Nz::Vector2ui(static_cast<unsigned int>(x), static_cast<unsigned int>(y)), chunkPos);
 	auto mat = m_map.getTiles(pos.x - 1, pos.y - 1, 3, 3, layer);
+	auto centerID = mat(1, 1).id;
 
-	FixedMatrix<bool, 3, 3> tiles;
+	clearTile(static_cast<unsigned int>(x), static_cast<unsigned int>(y));
 
-		for (int i = 0; i < 3; i++)
-			for (int j = 0; j < 3; j++)
-				tiles(i, j) = mat(i, j).id <= mat(1, 1).id;
+	std::vector<size_t> setMats;
+	for(size_t k = 0 ; k < 3 ; k++)
+		for (size_t l = 0; l < 3; l++)
+		{
+			auto currentID = mat(k, l).id;
+			if (currentID > centerID || std::find(setMats.begin(), setMats.end(), currentID) != setMats.end())
+				continue;
+			setMats.push_back(currentID);
 
-		auto id = m_definition->getRandomTile(mat(1, 1).id, localMatrixToTileConnexionType(tiles), StaticRandomGenerator<std::mt19937>());
+			FixedMatrix<bool, 3, 3> tiles;
+			for (int i = 0; i < 3; i++)
+				for (int j = 0; j < 3; j++)
+					tiles(i, j) = mat(i, j).id <= mat(1, 1).id;
 
-		//todo get old mat value
-		setTile(mat(1, 1).id, localMatrixToTileConnexionType(tiles), static_cast<unsigned int>(x), static_cast<unsigned int>(y));
+			auto id = m_definition->getRandomTile(mat(1, 1).id, localMatrixToTileConnexionType(tiles), StaticRandomGenerator<std::mt19937>());
+
+			setTile(currentID, localMatrixToTileConnexionType(tiles), static_cast<unsigned int>(x), static_cast<unsigned int>(y));
+		}
+	
+	cleanLayers();
 }
 
 void ChunkGroundRenderBehaviour::onEnable()
@@ -92,7 +104,6 @@ void ChunkGroundRenderBehaviour::onMapChange(size_t layer, size_t x, size_t y)
 
 void ChunkGroundRenderBehaviour::onLayerAdd()
 {
-	fillOldTiles();
 	onFullMapChange();
 }
 
@@ -116,14 +127,24 @@ void ChunkGroundRenderBehaviour::onTileChange(size_t x, size_t y)
 		{
 			if (i >= 0 && j >= 0 && i < Chunk::chunkSize && j < Chunk::chunkSize)
 			{
-				Tile centerTile = mat(i - x + 2, j - y + 2);
-				FixedMatrix<bool, 3, 3> tiles;
-				for (int k = 0; k < 3; k++)
-					for (int l = 0; l < 3; l++)
-						tiles(k, l) = mat(i - x + 1 + k, j - y + 1 + l).id <= centerTile.id;
+				clearTile(static_cast<unsigned int>(i), static_cast<unsigned int>(j));
 
-				//todo get old mat value
-				setTile(centerTile.id, localMatrixToTileConnexionType(tiles), i, j);
+				Tile centerTile = mat(i - x + 2, j - y + 2);
+				std::vector<size_t> setMats;
+				for (size_t m = 0; m < 3; m++)
+					for (size_t n = 0; n < 3; n++)
+					{
+						auto currentID = mat(m, n).id;
+						if (currentID > centerTile.id || std::find(setMats.begin(), setMats.end(), currentID) != setMats.end())
+							continue;
+						setMats.push_back(currentID);
+						FixedMatrix<bool, 3, 3> tiles;
+						for (int k = 0; k < 3; k++)
+							for (int l = 0; l < 3; l++)
+								tiles(k, l) = mat(i - x + 1 + k, j - y + 1 + l).id <= currentID;
+
+						setTile(currentID, localMatrixToTileConnexionType(tiles), i, j);
+					}
 			}
 
 			int chunkX = m_chunkX - (i < 0) + (i >= Chunk::chunkSize);
@@ -134,6 +155,7 @@ void ChunkGroundRenderBehaviour::onTileChange(size_t x, size_t y)
 			assert(!(chunkX == m_chunkX && chunkY == m_chunkY));
 			m_worldRender.onBoderBlockUpdate(chunkX, chunkY, newX, newY, 0);
 		}
+	cleanLayers();
 }
 
 void ChunkGroundRenderBehaviour::onFullMapChange()
@@ -148,13 +170,25 @@ void ChunkGroundRenderBehaviour::onFullMapChange()
 	for (int i = 0; i < Chunk::chunkSize; i++)
 		for (int j = 0; j < Chunk::chunkSize; j++)
 		{
-			Tile centerTile = mat(i + 1, j + 1);
-			FixedMatrix<bool, 3, 3> tiles;
-			for (int k = 0; k < 3; k++)
-				for (int l = 0; l < 3; l++)
-					tiles(k, l) = mat(i + k, j + l).id == centerTile.id;
+			clearTile(static_cast<unsigned int>(i), static_cast<unsigned int>(j));
 
-			setTile(centerTile.id, localMatrixToTileConnexionType(tiles), i, j);
+			Tile centerTile = mat(i + 1, j + 1);
+			std::vector<size_t> setMats;
+			for (size_t m = 0; m < 3; m++)
+				for (size_t n = 0; n < 3; n++)
+				{
+					auto currentID = mat(m, n).id;
+					if (currentID > centerTile.id || std::find(setMats.begin(), setMats.end(), currentID) != setMats.end())
+						continue;
+					setMats.push_back(currentID);
+
+					FixedMatrix<bool, 3, 3> tiles;
+					for (int k = 0; k < 3; k++)
+						for (int l = 0; l < 3; l++)
+							tiles(k, l) = mat(i + k, j + l).id == centerTile.id;
+
+					setTile(currentID, localMatrixToTileConnexionType(tiles), i, j);
+				}
 		}
 
 	//update corners
@@ -171,27 +205,12 @@ void ChunkGroundRenderBehaviour::onFullMapChange()
 		m_worldRender.onBoderBlockUpdate(m_chunkX, m_chunkY - 1, i, Chunk::chunkSize - 1, 0);
 		m_worldRender.onBoderBlockUpdate(m_chunkX, m_chunkY + 1, i, 0, 0);
 	}
+	cleanLayers();
 }
 
 void ChunkGroundRenderBehaviour::setTile(size_t mat, TileConnexionType type, unsigned int x, unsigned int y)
 {
-	size_t oldMat = m_oldTiles(x, y);
-	m_oldTiles(x, y) = mat;
-
 	auto & renderer = getEntity()->GetComponent<Ndk::GraphicsComponent>();
-	if (oldMat != 0 && mat != oldMat)
-	{
-		auto it = std::find_if(m_tilemaps.begin(), m_tilemaps.end(), [oldMat](const auto & map) {return map.materialIndex == oldMat; });
-		assert(it != m_tilemaps.end());
-
-		it->setTilesCount--;
-		if (it->setTilesCount == 0)
-		{
-			renderer.Detach(it->tilemap);
-			m_tilemaps.erase(it);
-		}
-		else drawTile(*it, x, y, 0, 0);
-	}
 
 	if (mat == 0)
 		return;
@@ -213,12 +232,23 @@ void ChunkGroundRenderBehaviour::setTile(size_t mat, TileConnexionType type, uns
 		renderer.Attach(tilemap, Nz::Matrix4f::Translate(Nz::Vector3f(0, 0, - 2.0f)));
 		m_tilemaps.push_back(TilemapInfos{ tilemap, std::move(textures), mat, 0 });
 
-		updateMaterialsHeights();
 		it = m_tilemaps.end() - 1;
 	}
 
 	auto id = m_definition->getRandomTile(mat, type, StaticRandomGenerator<std::mt19937>());
 	drawTile(*it, x, y, id.tileID, id.textureID);
+}
+
+void ChunkGroundRenderBehaviour::clearTile(unsigned int x, unsigned int y)
+{
+	for (auto & m : m_tilemaps)
+		drawTile(m, x, y, 0, 0);
+}
+
+void ChunkGroundRenderBehaviour::cleanLayers()
+{
+	m_tilemaps.erase(std::remove_if(m_tilemaps.begin(), m_tilemaps.end(), [](const auto & m) {return m.setTilesCount == 0; }), m_tilemaps.end());
+	updateMaterialsHeights();
 }
 
 void ChunkGroundRenderBehaviour::drawTile(ChunkGroundRenderBehaviour::TilemapInfos & map, unsigned int x, unsigned int y, size_t id, size_t textureIndex)
@@ -263,19 +293,4 @@ void ChunkGroundRenderBehaviour::updateMaterialsHeights()
 
 		renderer.UpdateLocalMatrix(it->tilemap, Nz::Matrix4f::Translate(Nz::Vector3f(0, 0, static_cast<float>(i) - orderedMats.size() - 1.0f)));
 	}
-}
-
-void ChunkGroundRenderBehaviour::fillOldTiles()
-{
-	if (m_chunk.layerCount() == 0)
-		return;
-
-	m_oldTiles.resize(Chunk::chunkSize, Chunk::chunkSize);
-
-
-	const auto & m = m_chunk.getMap(0);
-	for (size_t x = 0; x < Chunk::chunkSize; x++)
-		for (size_t y = 0; y < Chunk::chunkSize; y++)
-			//m_oldTiles(x, y) = m->getTile(x, y).id;
-			m_oldTiles(x, y) = 0;
 }

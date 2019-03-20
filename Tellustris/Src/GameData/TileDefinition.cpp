@@ -70,7 +70,10 @@ void TileDefinition::addTile(size_t materialID, TileConnexionType connexion, siz
 const std::vector<SingleTileDefinition> & TileDefinition::getTile(size_t materialID, TileConnexionType connexions) const
 {
 	if (materialID >= m_materials.size())
-		return {};
+	{
+		static std::vector<SingleTileDefinition> temp;
+		return temp;
+	}
 	return m_materials[materialID].tiles[static_cast<size_t>(connexions)];
 }
 
