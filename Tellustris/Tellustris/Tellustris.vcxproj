@@ -183,6 +183,8 @@
     <ClInclude Include="..\Include\Tilemap\Tile.h" />
     <ClInclude Include="..\Include\Tilemap\Tilemap.h" />
     <ClInclude Include="..\Include\Tilemap\TilemapAnimations.h" />
+    <ClInclude Include="..\Include\Utility\enumclasshash.h" />
+    <ClInclude Include="..\Include\Utility\enumiterators.h" />
     <ClInclude Include="..\Include\Utility\Event\Args.h" />
     <ClInclude Include="..\Include\Utility\Event\Event.h" />
     <ClInclude Include="..\Include\Utility\Event\WindowEventArgs.h" />

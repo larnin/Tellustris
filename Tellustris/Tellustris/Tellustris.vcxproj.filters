@@ -275,6 +275,12 @@
     <ClInclude Include="..\Include\GameData\Behaviours\ChunkGroundRenderBehaviour.h">
       <Filter>Fichiers d%27en-tête\GameData\Behaviours</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\Utility\enumiterators.h">
+      <Filter>Fichiers d%27en-tête\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Utility\enumclasshash.h">
+      <Filter>Fichiers d%27en-tête\Utility</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Include\Utility\Expression\ExpressionParser.inl">
