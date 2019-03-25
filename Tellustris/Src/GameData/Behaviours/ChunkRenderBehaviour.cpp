@@ -17,9 +17,6 @@ ChunkRenderBehaviour::ChunkRenderBehaviour(Chunk & chunk, WorldMap & map, WorldR
 	, m_definition(definition)
 {
 	m_layerChangedHolder = chunk.registerLayerChangedCallback([this](const auto & layerChanged) {onLayerChange(layerChanged.layer, layerChanged.state); });
-
-	for (size_t layer = 1; layer < chunk.layerCount(); layer++)
-		onLayerAdd(layer);
 }
 
 BehaviourRef ChunkRenderBehaviour::clone() const
@@ -53,12 +50,15 @@ void ChunkRenderBehaviour::onBoderBlockUpdate(size_t x, size_t y, size_t layer)
 	
 void ChunkRenderBehaviour::onEnable()
 {
-	for (size_t i = 0; i < m_chunk.layerCount(); i++)
+	for (size_t i = 1; i < m_chunk.layerCount(); i++)
 		onLayerAdd(i);
 }
 
 void ChunkRenderBehaviour::onDisable()
 {
+	if (!haveEntity())
+		return;
+
 	auto & graph = getEntity()->GetComponent<Ndk::GraphicsComponent>();
 
 	for (const auto & m : m_tilemaps)
@@ -95,7 +95,7 @@ void ChunkRenderBehaviour::onLayerAdd(size_t layer)
 	if (layer == 0)
 		return;
 
-	assert(layer == m_tilemaps.size() - 1);
+	assert(layer == m_tilemaps.size() + 1);
 
 	auto & graph = getEntity()->GetComponent<Ndk::GraphicsComponent>();
 		
@@ -131,7 +131,7 @@ void ChunkRenderBehaviour::onLayerRemove(size_t layer)
 	if (layer == 0)
 		return;
 
-	assert(layer == m_tilemaps.size() - 2);
+	assert(layer == m_tilemaps.size());
 
 	auto & graph = getEntity()->GetComponent<Ndk::GraphicsComponent>();
 

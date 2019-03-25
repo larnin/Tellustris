@@ -104,8 +104,8 @@ void WorldRenderBehaviour2::onEnable()
 {
 	for (auto & c : m_chunks)
 	{
-		c.entity->Disable();
-		c.groundEntity->Disable();
+		c.entity->Enable();
+		c.groundEntity->Enable();
 	}
 }
 
@@ -113,8 +113,8 @@ void WorldRenderBehaviour2::onDisable()
 {
 	for (auto & c : m_chunks)
 	{
-		c.entity->Enable();
-		c.groundEntity->Enable();
+		c.entity->Disable();
+		c.groundEntity->Disable();
 	}
 }
 
@@ -145,6 +145,7 @@ void WorldRenderBehaviour2::onCenterViewUpdate(float x, float y)
 
 void WorldRenderBehaviour2::addChunk(int x, int y)
 {
+	//draw layers that are not ground
 	auto entity = getEntity()->GetWorld()->CreateEntity();
 	auto & node = entity->AddComponent<Ndk::NodeComponent>();
 	entity->AddComponent<Ndk::GraphicsComponent>();
@@ -153,6 +154,7 @@ void WorldRenderBehaviour2::addChunk(int x, int y)
 	node.SetPosition(static_cast<float>(x) * Chunk::chunkSize, static_cast<float>(y) * Chunk::chunkSize, static_cast<float>(y) * Chunk::chunkSize);
 	auto chunkBehaviour = std::make_unique<ChunkRenderBehaviour>(m_map.getChunk(x, y), m_map, *this, x, y, m_definition);
 
+	//draw ground layer
 	auto entity2 = getEntity()->GetWorld()->CreateEntity();
 	auto & node2 = entity2->AddComponent<Ndk::NodeComponent>();
 	entity2->AddComponent<Ndk::GraphicsComponent>();
@@ -163,6 +165,7 @@ void WorldRenderBehaviour2::addChunk(int x, int y)
 
 	m_chunks.push_back(ChunkInfo{ entity, chunkBehaviour.get(), entity2, chunkBehaviour2.get(), x, y });
 	behaviour.attach(std::move(chunkBehaviour));
+	behaviour2.attach(std::move(chunkBehaviour2));
 
 }
 

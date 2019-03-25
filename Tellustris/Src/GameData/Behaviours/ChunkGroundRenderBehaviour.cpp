@@ -17,9 +17,6 @@ ChunkGroundRenderBehaviour::ChunkGroundRenderBehaviour(Chunk & chunk, WorldMap &
 	, m_definition(definition)
 {
 	m_layerChangedHolder = chunk.registerLayerChangedCallback([this](const auto & layerChanged) {onLayerChange(layerChanged.layer, layerChanged.state); });
-
-	if(chunk.layerCount() > 0)
-		onLayerAdd();
 }
 
 BehaviourRef ChunkGroundRenderBehaviour::clone() const
@@ -72,6 +69,9 @@ void ChunkGroundRenderBehaviour::onEnable()
 
 void ChunkGroundRenderBehaviour::onDisable()
 {
+	if (!haveEntity())
+		return;
+
 	onLayerRemove();
 }
 

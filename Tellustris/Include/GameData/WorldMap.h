@@ -12,6 +12,9 @@ public:
 	WorldMap(const WorldMap &) = delete;
 	WorldMap & operator=(const WorldMap &) = delete;
 
+	size_t width() const { return m_width; }
+	size_t height() const { return m_height; }
+
 	const Chunk & getChunk(int x, int y) const;
 	Chunk & getChunk(int x, int y);
 

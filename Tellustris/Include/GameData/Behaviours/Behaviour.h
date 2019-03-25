@@ -19,11 +19,13 @@ public:
 	size_t index() const { return m_index; }
 
 protected:
+	bool haveEntity() const { return m_entity.IsValid(); }
 	Ndk::EntityHandle getEntity() const { return m_entity; }
 
 	virtual void onStart() {}
 	virtual void onEnable() {}
 	virtual void onDisable() {}
+	virtual void onDestroy() {}
 	virtual void onUpdate(float deltaTime) {}
 
 	virtual void OnEntityComponentAttached(Ndk::BaseComponent& component) {}

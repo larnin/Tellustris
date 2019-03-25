@@ -119,8 +119,8 @@ void BehaviourComponent::OnDetached()
 
 	for (auto & b : m_behaviours)
 	{
-		b->m_entity = nullptr;
 		b->onDisable();
+		b->m_entity = nullptr;
 	}
 }
 
@@ -131,8 +131,8 @@ void BehaviourComponent::OnEntityDestruction()
 
 	for (auto & b : m_behaviours)
 	{
+		b->onDestroy();
 		b->m_entity = nullptr;
-		b->onDisable();
 	}
 }
 

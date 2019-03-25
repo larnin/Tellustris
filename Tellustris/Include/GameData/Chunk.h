@@ -36,10 +36,9 @@ public:
 		ChangeState state;
 	};
 
-	static const size_t chunkSize = 16;
+	static const size_t chunkSize = 32;
 	static const unsigned int tileSize = 16;
-	static const unsigned int tileDelta = 0;
-	static const size_t staticLayers = 2; //2 layers are present all the time
+	static const unsigned int tileDelta = 1;
 
 	Chunk();
 	Chunk(const Chunk &) = delete;

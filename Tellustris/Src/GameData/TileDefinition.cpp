@@ -1,6 +1,8 @@
 
 #include "GameData/TileDefinition.h"
 
+#include <limits>
+
 size_t TileDefinition::addTexture(Nz::TextureRef texture)
 {
 	auto it = std::find(m_textures.begin(), m_textures.end(), texture);
@@ -51,10 +53,12 @@ size_t TileDefinition::textureCount() const
 
 void TileDefinition::addTile(size_t materialID, TileConnexionType connexion, const SingleTileDefinition & def)
 {
-	while (materialID >= m_materials.size())
+	assert(materialID > 0);
+
+	while (materialID > m_materials.size())
 		m_materials.push_back({});
 
-	auto & tile = m_materials[materialID].tiles[static_cast<size_t>(connexion)];
+	auto & tile = m_materials[materialID - 1].tiles[static_cast<size_t>(connexion)];
 	auto it = std::find_if(tile.begin(), tile.end(), [def](const auto & t) {return t.textureID == def.textureID && t.tileID == def.tileID; });
 
 	if (it != tile.end())
@@ -69,20 +73,29 @@ void TileDefinition::addTile(size_t materialID, TileConnexionType connexion, siz
 
 const std::vector<SingleTileDefinition> & TileDefinition::getTile(size_t materialID, TileConnexionType connexions) const
 {
-	if (materialID >= m_materials.size())
+	assert(materialID > 0);
+
+	if (materialID > m_materials.size())
 	{
 		static std::vector<SingleTileDefinition> temp;
 		return temp;
 	}
-	return m_materials[materialID].tiles[static_cast<size_t>(connexions)];
+	return m_materials[materialID - 1].tiles[static_cast<size_t>(connexions)];
+}
+
+void TileDefinition::addAllowedLayers(size_t materialID, size_t min)
+{
+	addAllowedLayers(materialID, min, std::numeric_limits<size_t>::max());
 }
 
 void TileDefinition::addAllowedLayers(size_t materialID, size_t min, size_t max)
 {
-	while (materialID >= m_materials.size())
+	assert(materialID > 0);
+
+	while (materialID > m_materials.size())
 		m_materials.push_back({});
 
-	m_materials[materialID].allowedLayers.push_back(TileMaterialLayers{ min, max });
+	m_materials[materialID - 1].allowedLayers.push_back(TileMaterialLayers{ min, max });
 }
 
 size_t TileDefinition::materialCount() const
@@ -97,12 +110,14 @@ void TileDefinition::clearMaterials()
 
 std::vector<size_t> TileDefinition::texturesIndexsForMaterial(size_t materialID) const
 {
-	if (materialID >= m_materials.size())
+	assert(materialID > 0);
+
+	if (materialID > m_materials.size())
 		return {};
 
 	std::vector<size_t> indexs;
 
-	for (const auto & tiles : m_materials[materialID].tiles)
+	for (const auto & tiles : m_materials[materialID - 1].tiles)
 		for (const auto & t : tiles)
 		{
 			if (t.tileID == 0)
@@ -115,10 +130,12 @@ std::vector<size_t> TileDefinition::texturesIndexsForMaterial(size_t materialID)
 
 bool TileDefinition::isMaterialAllowedOnLayer(size_t materialID, size_t layer) const
 {
-	if (materialID >= m_materials.size())
+	assert(materialID > 0);
+
+	if (materialID > m_materials.size())
 		return false;
 
-	const auto & mat = m_materials[materialID];
+	const auto & mat = m_materials[materialID - 1];
 	for (const auto & allow : mat.allowedLayers)
 		if (allow.min <= layer && allow.max >= layer)
 			return true;

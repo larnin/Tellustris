@@ -12,8 +12,10 @@
 #include "GameData/Behaviours/ViewUpdaterBehaviour.h"
 #include "GameData/WorldMap.h"
 #include "GameData/Behaviours/WorldRenderBehaviour.h"
+#include "GameData/Behaviours/WorldRenderBehaviour2.h"
 #include "GameData/LoadRessources.h"
 #include "Utility/Perlin.h"
+#include "Utility/enumiterators.h"
 
 #include <NDK/Application.hpp>
 #include <NDK/World.hpp> 
@@ -274,95 +276,95 @@
 //	return EXIT_SUCCESS;
 //}
 
-int main()
-{
-	Ndk::Application application;
-	
-	InitializeSystemsAndComponents();
-	RessourceLoader::loadAll("./Data/");
-	
-	Nz::TextureSampler::SetDefaultFilterMode(Nz::SamplerFilter::SamplerFilter_Nearest);
-	
-	Nz::RenderWindow& mainWindow = application.AddWindow<Nz::RenderWindow>();
-	mainWindow.Create(Nz::VideoMode(800, 600, 32), "Test");
-	mainWindow.SetFramerateLimit(60);
-	
-	WindowEventsHolder windowEventsHolder(mainWindow.GetEventHandler());
-	
-	Ndk::World& world = application.AddWorld();
-	world.AddSystem<AnimatorSystem>();
-	world.AddSystem<TilemapAnimationsSystem>();
-	world.AddSystem<BehaviourSystem>();
-	world.GetSystem<Ndk::RenderSystem>().SetGlobalUp(Nz::Vector3f::Down());
-
-	Ndk::EntityHandle player = world.CreateEntity();
-	{
-		auto mat = Nz::Material::New("Translucent3D");
-		mat->EnableDepthSorting(true);
-		//mat->EnableDepthWrite(true);
-		auto sprite = Nz::Sprite::New(mat);
-		sprite->SetTexture(Ressource<Nz::Texture>::get("Img/square.png"));
-		sprite->SetSize(1, 1);
-		auto & node = player->AddComponent<Ndk::NodeComponent>();
-		node.SetPosition(0, 0, 1);
-		auto & graph = player->AddComponent<Ndk::GraphicsComponent>();
-		graph.Attach(sprite);
-		auto & behaviour = player->AddComponent<BehaviourComponent>();
-		behaviour.attach(std::make_unique<ViewUpdaterBehaviour>());
-	}
-
-	Ndk::EntityHandle camera = world.CreateEntity();
-	{
-		auto & node = camera->AddComponent<Ndk::NodeComponent>();
-		node.SetParent(player->GetComponent<Ndk::NodeComponent>());
-		node.SetPosition(-(mainWindow.GetSize().x / 32.f), -(mainWindow.GetSize().y / 32.f), 10);
-		Ndk::CameraComponent& viewer = camera->AddComponent<Ndk::CameraComponent>();
-		viewer.SetTarget(&mainWindow);
-		viewer.SetProjectionType(Nz::ProjectionType_Orthogonal);
-		viewer.SetSize(mainWindow.GetSize().x / 16.f, mainWindow.GetSize().y / 16.f);
-	}
-		
-	WorldMap map(2, 2);
-	Ndk::EntityHandle mapEntity = world.CreateEntity();
-	{
-		for(unsigned int i = 0 ; i < 2 ; i++)
-			for (unsigned int j = 0; j < 2; j++)
-			{
-				auto & c = map.getChunk(i, j);
-				for(unsigned int x = 0 ; x < Chunk::chunkSize ; x++)
-					for (unsigned int y = 0; y < Chunk::chunkSize; y++)
-						c.setTile(x, y, Tile{ i + j * 2 + 1,{} }, 0);
-			}
-
-		Ressource<Tilemap>::add("test", map.getChunk(0, 0).getMap(0));
-
-		mapEntity->AddComponent<Ndk::NodeComponent>();
-		auto & behaviour = mapEntity->AddComponent<BehaviourComponent>();
-		behaviour.attach(std::make_unique<WorldRenderBehaviour>(map, 20.f));
-	}
-
-	auto & playerNode = player->GetComponent<Ndk::NodeComponent>();
-	while (application.Run())
-	{
-		const float speed = 15.f;
-		Nz::Vector2f dir(Nz::Keyboard::IsKeyPressed(Nz::Keyboard::Right) - Nz::Keyboard::IsKeyPressed(Nz::Keyboard::Left)
-			, Nz::Keyboard::IsKeyPressed(Nz::Keyboard::Down) - Nz::Keyboard::IsKeyPressed(Nz::Keyboard::Up));
-		if (dir.GetSquaredLength() > 0.1f)
-			dir.Normalize();
-		dir *= speed * application.GetUpdateTime();
-			
-		auto pos = playerNode.GetPosition();
-		pos.x += dir.x;
-		pos.y += dir.y;
-		playerNode.SetPosition(pos);
-			
-		mainWindow.Display();
-	}
-
-	RessourceLoader::unloadAll();
-			
-	return EXIT_SUCCESS;
-}
+//int main()
+//{
+//	Ndk::Application application;
+//	
+//	InitializeSystemsAndComponents();
+//	RessourceLoader::loadAll("./Data/");
+//	
+//	Nz::TextureSampler::SetDefaultFilterMode(Nz::SamplerFilter::SamplerFilter_Nearest);
+//	
+//	Nz::RenderWindow& mainWindow = application.AddWindow<Nz::RenderWindow>();
+//	mainWindow.Create(Nz::VideoMode(800, 600, 32), "Test");
+//	mainWindow.SetFramerateLimit(60);
+//	
+//	WindowEventsHolder windowEventsHolder(mainWindow.GetEventHandler());
+//	
+//	Ndk::World& world = application.AddWorld();
+//	world.AddSystem<AnimatorSystem>();
+//	world.AddSystem<TilemapAnimationsSystem>();
+//	world.AddSystem<BehaviourSystem>();
+//	world.GetSystem<Ndk::RenderSystem>().SetGlobalUp(Nz::Vector3f::Down());
+//
+//	Ndk::EntityHandle player = world.CreateEntity();
+//	{
+//		auto mat = Nz::Material::New("Translucent3D");
+//		mat->EnableDepthSorting(true);
+//		//mat->EnableDepthWrite(true);
+//		auto sprite = Nz::Sprite::New(mat);
+//		sprite->SetTexture(Ressource<Nz::Texture>::get("Img/square.png"));
+//		sprite->SetSize(1, 1);
+//		auto & node = player->AddComponent<Ndk::NodeComponent>();
+//		node.SetPosition(0, 0, 1);
+//		auto & graph = player->AddComponent<Ndk::GraphicsComponent>();
+//		graph.Attach(sprite);
+//		auto & behaviour = player->AddComponent<BehaviourComponent>();
+//		behaviour.attach(std::make_unique<ViewUpdaterBehaviour>());
+//	}
+//
+//	Ndk::EntityHandle camera = world.CreateEntity();
+//	{
+//		auto & node = camera->AddComponent<Ndk::NodeComponent>();
+//		node.SetParent(player->GetComponent<Ndk::NodeComponent>());
+//		node.SetPosition(-(mainWindow.GetSize().x / 32.f), -(mainWindow.GetSize().y / 32.f), 10);
+//		Ndk::CameraComponent& viewer = camera->AddComponent<Ndk::CameraComponent>();
+//		viewer.SetTarget(&mainWindow);
+//		viewer.SetProjectionType(Nz::ProjectionType_Orthogonal);
+//		viewer.SetSize(mainWindow.GetSize().x / 16.f, mainWindow.GetSize().y / 16.f);
+//	}
+//		
+//	WorldMap map(2, 2);
+//	Ndk::EntityHandle mapEntity = world.CreateEntity();
+//	{
+//		for(unsigned int i = 0 ; i < 2 ; i++)
+//			for (unsigned int j = 0; j < 2; j++)
+//			{
+//				auto & c = map.getChunk(i, j);
+//				for(unsigned int x = 0 ; x < Chunk::chunkSize ; x++)
+//					for (unsigned int y = 0; y < Chunk::chunkSize; y++)
+//						c.setTile(x, y, Tile{ i + j * 2 + 1,{} }, 0);
+//			}
+//
+//		Ressource<Tilemap>::add("test", map.getChunk(0, 0).getMap(0));
+//
+//		mapEntity->AddComponent<Ndk::NodeComponent>();
+//		auto & behaviour = mapEntity->AddComponent<BehaviourComponent>();
+//		behaviour.attach(std::make_unique<WorldRenderBehaviour>(map, 20.f));
+//	}
+//
+//	auto & playerNode = player->GetComponent<Ndk::NodeComponent>();
+//	while (application.Run())
+//	{
+//		const float speed = 15.f;
+//		Nz::Vector2f dir(Nz::Keyboard::IsKeyPressed(Nz::Keyboard::Right) - Nz::Keyboard::IsKeyPressed(Nz::Keyboard::Left)
+//			, Nz::Keyboard::IsKeyPressed(Nz::Keyboard::Down) - Nz::Keyboard::IsKeyPressed(Nz::Keyboard::Up));
+//		if (dir.GetSquaredLength() > 0.1f)
+//			dir.Normalize();
+//		dir *= speed * application.GetUpdateTime();
+//			
+//		auto pos = playerNode.GetPosition();
+//		pos.x += dir.x;
+//		pos.y += dir.y;
+//		playerNode.SetPosition(pos);
+//			
+//		mainWindow.Display();
+//	}
+//
+//	RessourceLoader::unloadAll();
+//			
+//	return EXIT_SUCCESS;
+//}
 
 //int main()
 //{
@@ -405,3 +407,132 @@ int main()
 //	std::getchar();
 //
 //}
+
+int main()
+{
+	Ndk::Application application;
+
+	InitializeSystemsAndComponents();
+	RessourceLoader::loadAll("./Data/");
+
+	Nz::TextureSampler::SetDefaultFilterMode(Nz::SamplerFilter::SamplerFilter_Nearest);
+
+	Nz::RenderWindow& mainWindow = application.AddWindow<Nz::RenderWindow>();
+	mainWindow.Create(Nz::VideoMode(1500, 900, 32), "Test");
+	mainWindow.SetFramerateLimit(60);
+
+	WindowEventsHolder windowEventsHolder(mainWindow.GetEventHandler());
+
+	Ndk::World& world = application.AddWorld();
+	world.AddSystem<AnimatorSystem>();
+	world.AddSystem<TilemapAnimationsSystem>();
+	world.AddSystem<BehaviourSystem>();
+	world.GetSystem<Ndk::RenderSystem>().SetGlobalUp(Nz::Vector3f::Down());
+
+	Ndk::EntityHandle player = world.CreateEntity();
+	{
+		auto mat = Nz::Material::New("Translucent3D");
+		mat->EnableDepthSorting(true);
+		//mat->EnableDepthWrite(true);
+		auto sprite = Nz::Sprite::New(mat);
+		sprite->SetTexture(Ressource<Nz::Texture>::get("Img/square.png"));
+		sprite->SetSize(1, 1);
+		auto & node = player->AddComponent<Ndk::NodeComponent>();
+		node.SetPosition(0, 0, 1);
+		auto & graph = player->AddComponent<Ndk::GraphicsComponent>();
+		graph.Attach(sprite);
+		auto & behaviour = player->AddComponent<BehaviourComponent>();
+		behaviour.attach(std::make_unique<ViewUpdaterBehaviour>());
+	}
+
+	Ndk::EntityHandle camera = world.CreateEntity();
+	{
+		auto & node = camera->AddComponent<Ndk::NodeComponent>();
+		node.SetParent(player->GetComponent<Ndk::NodeComponent>());
+		node.SetPosition(-(mainWindow.GetSize().x / 32.f), -(mainWindow.GetSize().y / 32.f), 10);
+		Ndk::CameraComponent& viewer = camera->AddComponent<Ndk::CameraComponent>();
+		viewer.SetTarget(&mainWindow);
+		viewer.SetProjectionType(Nz::ProjectionType_Orthogonal);
+		viewer.SetSize(mainWindow.GetSize().x / 16.f, mainWindow.GetSize().y / 16.f);
+	}
+
+	size_t chunkNb = 2;
+	WorldMap map(chunkNb, chunkNb);
+
+	Ndk::EntityHandle mapEntity = world.CreateEntity();
+	{
+		auto def = TileDefinition::New();
+		def->addTexture(Ressource<Nz::Texture>::get("Img/tile4.png"));
+		for (auto c : TileConnexionType::Max)
+			def->addTile(1, c, 2, 0, 1);
+		for (size_t i = 2; i <= 5; i++)
+			for (auto c : TileConnexionType::Max)
+				def->addTile(i, c, (i - 1) * static_cast<size_t>(TileColliderType::Max) + static_cast<size_t>(c) + 1, 0, 1);
+		for (size_t i = 1; i <= 5; i++)
+			def->addAllowedLayers(i, 0, 0);
+
+		//size_t size = chunkNb * Chunk::chunkSize;
+		//Perlin2D perlinGround1(size, 1.f / 2, 5, 5);
+		//Perlin2D perlinGround2(size, 1.f / 4, 10, 6);
+		//Perlin2D perlinSand(size, 1.f, 5, 8);
+
+		//for(size_t x = 0 ; x < size ; x++)
+		//	for (size_t y = 0; y < size; y++)
+		//	{
+		//		unsigned int id = 0;
+		//		auto height = perlinGround1(x, y) + perlinGround2(x, y);
+		//		auto isSand = perlinSand(x, y) > 0 && std::abs(height) < 0.1f;
+
+		//		if (height < 0)
+		//		{
+		//			if (!isSand)
+		//				id = 1;
+		//			else id = 4;
+		//		}
+		//		else
+		//		{
+		//			if (!isSand)
+		//				id = 3;
+		//			else id = 2;
+		//		}
+		//		map.setTile(x, y, Tile{ id, 0 }, 0);
+		//	}
+
+		for(unsigned int i = 0 ; i < map.width() ; i++)
+			for (unsigned int j = 0; j < map.height(); j++)
+			{
+				auto & c = map.getChunk(i, j);
+				for(unsigned int x = 0 ; x < Chunk::chunkSize ; x++)
+					for (unsigned int y = 0; y < Chunk::chunkSize; y++)
+						c.setTile(x, y, Tile{ /*i + j * static_cast<unsigned int>(map.width()) +*/ 1,{} }, 0);
+			}
+
+		mapEntity->AddComponent<Ndk::NodeComponent>();
+		auto & behaviour = mapEntity->AddComponent<BehaviourComponent>();
+		behaviour.attach(std::make_unique<WorldRenderBehaviour2>(map, def, 20.f));
+	}
+
+
+	auto & playerNode = player->GetComponent<Ndk::NodeComponent>();
+
+	while (application.Run())
+	{
+		const float speed = 15.f;
+		Nz::Vector2f dir(Nz::Keyboard::IsKeyPressed(Nz::Keyboard::Right) - Nz::Keyboard::IsKeyPressed(Nz::Keyboard::Left)
+			, Nz::Keyboard::IsKeyPressed(Nz::Keyboard::Down) - Nz::Keyboard::IsKeyPressed(Nz::Keyboard::Up));
+		if (dir.GetSquaredLength() > 0.1f)
+			dir.Normalize();
+		dir *= speed * application.GetUpdateTime();
+			
+		auto pos = playerNode.GetPosition();
+		pos.x += dir.x;
+		pos.y += dir.y;
+		pos.z = pos.y;
+		playerNode.SetPosition(pos);
+			
+		mainWindow.Display();
+	}
+
+	RessourceLoader::unloadAll();
+
+}

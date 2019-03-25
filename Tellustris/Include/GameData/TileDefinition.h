@@ -50,6 +50,7 @@ public:
 	void addTile(size_t materialID, TileConnexionType connexion, const SingleTileDefinition & def);
 	void addTile(size_t materialID, TileConnexionType connexion, size_t tileID, size_t textureID = 0, float weight = 1);
 	const std::vector<SingleTileDefinition> & getTile(size_t materialID, TileConnexionType connexions) const;
+	void addAllowedLayers(size_t materialID, size_t min);
 	void addAllowedLayers(size_t materialID, size_t min, size_t max);
 	
 	template <typename Gen>

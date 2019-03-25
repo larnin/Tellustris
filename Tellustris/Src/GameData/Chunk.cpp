@@ -5,8 +5,7 @@
 
 Chunk::Chunk()
 {
-	m_tilemaps.push_back(TilemapLayer{ Tilemap::New(chunkSize, chunkSize, tileSize, tileDelta), 0.f, 1 });
-	m_tilemaps.push_back(TilemapLayer{ Tilemap::New(chunkSize, chunkSize, tileSize, tileDelta), 0.5f, 1 });
+
 }
 
 Tile Chunk::getTile(size_t x, size_t y, size_t layer) const
@@ -27,13 +26,13 @@ void Chunk::setTile(size_t x, size_t y, Tile tile, size_t layer)
 	assert(x < chunkSize);
 	assert(y < chunkSize);
 
-	bool haveNew = tilesEqual(tile, {});
+	bool haveNew = !tilesEqual(tile, {});
 
 	if (layer >= m_tilemaps.size())
 	{
 		if (!haveNew)
 			return;
-		for (size_t i = m_tilemaps.size(); i < layer; i++)
+		for (size_t i = m_tilemaps.size(); i <= layer; i++)
 		{
 			m_tilemaps.push_back(TilemapLayer{ Tilemap::New(chunkSize, chunkSize, tileSize, tileDelta), static_cast<float>(i) - 1 });
 			m_event.send(LayerChanged{ i, LayerChanged::ChangeState::added });
@@ -45,9 +44,6 @@ void Chunk::setTile(size_t x, size_t y, Tile tile, size_t layer)
 	m_tilemaps[layer].tilemap->setTile(x, y, tile);
 
 	//tile counting to automaticaly remove layer
-	if (layer < staticLayers)
-		return;
-
 	if (haveOld == haveNew)
 		return;
 
@@ -58,7 +54,7 @@ void Chunk::setTile(size_t x, size_t y, Tile tile, size_t layer)
 
 	if (layer == m_tilemaps.size() - 1 && m_tilemaps[layer].tileCount == 0)
 	{
-		while (m_tilemaps.size() > staticLayers && m_tilemaps.back().tileCount == 0)
+		while (m_tilemaps.size() > 0 && m_tilemaps.back().tileCount == 0)
 		{
 			m_event.send(LayerChanged{ m_tilemaps.size() - 1, LayerChanged::ChangeState::removed });
 			m_tilemaps.pop_back();

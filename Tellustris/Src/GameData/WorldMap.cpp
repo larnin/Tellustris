@@ -47,7 +47,7 @@ Matrix<Tile> WorldMap::getTiles(int x, int y, int width, int height, size_t laye
 	assert(height > 0);
 
 	auto minChunk = posToWorldChunkPos(x, y);
-	auto maxChunk = posToWorldChunkPos(x + width, y + height);
+	auto maxChunk = posToWorldChunkPos(x + width - 1, y + height - 1);
 
 	Matrix<Tile> tiles(width, height);
 
@@ -64,23 +64,23 @@ Matrix<Tile> WorldMap::getTiles(int x, int y, int width, int height, size_t laye
 			Nz::Vector2ui tilesMin(0, 0);
 
 			if (minPos.x < x)
-				cMin.x = minPos.x - x;
+				cMin.x = x - minPos.x;
 			else
 			{
 				cMin.x = 0;
-				tilesMin.x = x - minPos.x;
+				tilesMin.x = minPos.x - x;
 			}
 			if (minPos.y < y)
-				cMin.y = minPos.y - y;
+				cMin.y = y - minPos.y;
 			else
 			{
 				cMin.y = 0;
-				tilesMin.y = y - minPos.y;
+				tilesMin.y = minPos.y - y;
 			}
-			if (static_cast<int>(cMax.x - cMin.x + 1) > width)
-				cMax.x = width + cMin.x - 1;
-			if (static_cast<int>(cMax.y - cMin.y + 1) > height)
-				cMax.y = height + cMin.y - 1;
+			if (static_cast<int>(cMax.x - cMin.x + 1) > width - tilesMin.x)
+				cMax.x = width + cMin.x - 1 - tilesMin.x;
+			if (static_cast<int>(cMax.y - cMin.y + 1) > height - tilesMin.y)
+				cMax.y = height + cMin.y - 1 - tilesMin.y;
 
 			auto& chunk = getChunk(i, j);
 
