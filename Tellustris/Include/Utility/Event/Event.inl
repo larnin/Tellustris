@@ -11,7 +11,6 @@ template<typename T>
 EventImpl<T>::EventImpl(const std::function<void(const T &)> & _function)
 	: function(_function)
 	, blocked(false)
-	, disconnected(false)
 {
 }
 
@@ -19,7 +18,7 @@ template<typename T>
 inline EventHolder<T> Event<T>::connect(const std::function<void(const T&)>& function)
 {
 	m_events.push_back(std::make_unique<EventImpl<T>>(function));
-	return EventHolder<T>(m_events.back().get());
+	return EventHolder<T>(m_events.back());
 }
 
 template<typename T>
@@ -27,12 +26,12 @@ inline void Event<T>::send(const T & value)
 {
 	for (auto & e : m_events)
 	{
-		if (e->disconnected || e->blocked || !e->function)
+		if (!e || e->blocked || !e->function)
 			continue;
 		e->function(value);
 	}
 
-	m_events.erase(std::remove_if(m_events.begin(), m_events.end(), [](const auto & v) {return v->disconnected; }), m_events.end());
+	m_events.erase(std::remove_if(m_events.begin(), m_events.end(), [](const auto & v) {return !v; }), m_events.end());
 }
 
 template <typename T>
@@ -62,18 +61,17 @@ EventHolder<T>::EventHolder()
 
 template<typename T>
 EventHolder<T>::EventHolder(EventHolder<T> && e) noexcept
-	: m_eventImpl(e.m_eventImpl)
+	: m_eventImpl(std::move(e.m_eventImpl))
 {
-	e.m_eventImpl = nullptr;
+	e.m_eventImpl = {};
 }
 
 template<typename T>
 EventHolder<T> & EventHolder<T>::operator=(EventHolder<T> && e) noexcept
 {
-	if(m_eventImpl != nullptr)
-		m_eventImpl->disconnected = true;
+	disconnect();
 	m_eventImpl = e.m_eventImpl;
-	e.m_eventImpl = nullptr;
+	e.m_eventImpl = {};
 	return *this;
 }
 
@@ -86,15 +84,13 @@ EventHolder<T>::operator bool() const
 template<typename T>
 bool EventHolder<T>::isDisconnected() const
 {
-	if (m_eventImpl == nullptr)
-		return true;
-	return m_eventImpl->disconnected;
+	return !m_eventImpl;
 }
 
 template<typename T>
 bool EventHolder<T>::isBlocked() const
 {
-	if (m_eventImpl == nullptr)
+	if (!m_eventImpl)
 		return false;
 	return m_eventImpl->blocked;
 }
@@ -102,7 +98,7 @@ bool EventHolder<T>::isBlocked() const
 template<typename T>
 void EventHolder<T>::blockEvent(bool block)
 {
-	if (m_eventImpl == nullptr)
+	if (!m_eventImpl)
 		return;
 	m_eventImpl->blocked = block;
 }
@@ -110,10 +106,9 @@ void EventHolder<T>::blockEvent(bool block)
 template<typename T>
 void EventHolder<T>::disconnect()
 {
-	if (m_eventImpl == nullptr)
+	if (!m_eventImpl)
 		return;
-	m_eventImpl->disconnected = true;
-	m_eventImpl = nullptr;
+	m_eventImpl.reset();
 }
 
 template<typename T>
@@ -123,7 +118,7 @@ EventHolder<T>::~EventHolder()
 }
 
 template<typename T>
-EventHolder<T>::EventHolder(EventImpl<T> * e)
+EventHolder<T>::EventHolder(std::shared_ptr<EventImpl<T>> e)
 	: m_eventImpl(e)
 {
 }

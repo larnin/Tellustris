@@ -16,7 +16,6 @@ namespace
 
 		std::function<void(const T &)> function;
 		bool blocked;
-		bool disconnected;
 	};
 }
 
@@ -31,7 +30,7 @@ public:
 	void send(const T & value);
 
 private:
-	std::vector<std::unique_ptr<EventImpl<T>>> m_events;
+	std::vector<std::shared_ptr<EventImpl<T>>> m_events;
 };
 
 template <typename T>
@@ -66,8 +65,8 @@ public:
 	~EventHolder();
 
 private:
-	EventHolder(EventImpl<T>* e);
-	EventImpl<T>* m_eventImpl;
+	EventHolder(std::shared_ptr<EventImpl<T>> e);
+	std::shared_ptr<EventImpl<T>> m_eventImpl;
 };
 
 #include "Event.inl"
