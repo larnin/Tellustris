@@ -45,7 +45,7 @@ void ChunkRenderBehaviour::onBoderBlockUpdate(size_t x, size_t y, size_t layer)
 			tiles(i, j) = mat(i, j).id == mat(1, 1).id;
 
 	auto id = m_definition->getRandomTile(mat(1, 1).id, localMatrixToTileConnexionType(tiles), StaticRandomGenerator<std::mt19937>());
-	drawTile(m_tilemaps[layer], static_cast<unsigned int>(x), static_cast<unsigned int>(y), id.tileID, id.textureID);
+	drawTile(m_tilemaps[layer-1], static_cast<unsigned int>(x), static_cast<unsigned int>(y), id.tileID, id.textureID);
 }
 	
 void ChunkRenderBehaviour::onEnable()
@@ -102,15 +102,15 @@ void ChunkRenderBehaviour::onLayerAdd(size_t layer)
 	std::vector<size_t> texturesIndexs;
 	for (size_t i = 0; i < m_definition->materialCount(); i++)
 	{
-		if (!m_definition->isMaterialAllowedOnLayer(i, layer))
+		if (!m_definition->isMaterialAllowedOnLayer(i+1, layer))
 			continue;
-		auto textures = m_definition->texturesIndexsForMaterial(i);
+		auto textures = m_definition->texturesIndexsForMaterial(i+1);
 		for (auto t : textures)
 			if (std::find(texturesIndexs.begin(), texturesIndexs.end(), t) == texturesIndexs.end())
 				texturesIndexs.push_back(t);
 	}
 
-	auto tilemap = Nz::TileMap::New(Nz::Vector2ui(Chunk::chunkSize, Chunk::chunkSize), Nz::Vector2f(1, 1), texturesIndexs.size(), Nz::Vector2f(0, 1));
+	auto tilemap = Nz::TileMap::New(Nz::Vector2ui(Chunk::chunkSize, Chunk::chunkSize), Nz::Vector2f(1, 1), texturesIndexs.size());
 		
 	for (size_t i = 0 ; i < texturesIndexs.size() ; i++)
 	{
@@ -163,7 +163,7 @@ void ChunkRenderBehaviour::onTileChange(size_t x, size_t y, size_t layer)
 						tiles(k, l) = mat(i - x + 1 + k, j - y + 1 + l).id == centerTile.id;
 
 				auto id = m_definition->getRandomTile(centerTile.id, localMatrixToTileConnexionType(tiles), StaticRandomGenerator<std::mt19937>());
-				drawTile(m_tilemaps[layer], i, j, id.tileID, id.textureID);
+				drawTile(m_tilemaps[layer-1], i, j, id.tileID, id.textureID);
 			}
 
 			int chunkX = m_chunkX - (i < 0) + (i >= Chunk::chunkSize);
@@ -192,7 +192,7 @@ void ChunkRenderBehaviour::onFullMapChange(size_t layer)
 					tiles(k, l) = mat(i + k, j + l).id == centerTile.id;
 
 			auto id = m_definition->getRandomTile(centerTile.id, localMatrixToTileConnexionType(tiles), StaticRandomGenerator<std::mt19937>());
-			drawTile(m_tilemaps[layer], i, j, id.tileID, id.textureID);
+			drawTile(m_tilemaps[layer-1], i, j, id.tileID, id.textureID);
 		}
 
 	//update corners

@@ -221,6 +221,8 @@ void RessourceLoader::initializeMaterials()
 {
 	auto mat = Nz::Material::New("Translucent3D");
 	mat->EnableDepthWrite(true);
+	mat->EnableAlphaTest(true);
+	mat->EnableDepthSorting(false);
 
 	Ressource<Nz::Material>::add("default", mat);
 }

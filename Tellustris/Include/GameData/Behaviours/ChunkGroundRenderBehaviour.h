@@ -20,7 +20,6 @@ class ChunkGroundRenderBehaviour : public Behaviour
 		Nz::TileMapRef tilemap;
 		std::vector<size_t> texturesIndexs;
 		size_t materialIndex;
-		size_t setTilesCount;
 	};
 
 public:

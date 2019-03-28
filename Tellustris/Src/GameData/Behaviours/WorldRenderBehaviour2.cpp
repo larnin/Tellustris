@@ -7,6 +7,7 @@
 #include <NDK/World.hpp>
 #include <NDK/Components/NodeComponent.hpp>
 #include <NDK/Components/GraphicsComponent.hpp>
+#include <NDK/Components/DebugComponent.hpp>
 
 #include <cassert>
 
@@ -151,7 +152,7 @@ void WorldRenderBehaviour2::addChunk(int x, int y)
 	entity->AddComponent<Ndk::GraphicsComponent>();
 	auto & behaviour = entity->AddComponent<BehaviourComponent>();
 	node.SetParent(getEntity()->GetComponent<Ndk::NodeComponent>());
-	node.SetPosition(static_cast<float>(x) * Chunk::chunkSize, static_cast<float>(y) * Chunk::chunkSize, static_cast<float>(y) * Chunk::chunkSize);
+	node.SetPosition(static_cast<float>(x) * Chunk::chunkSize, static_cast<float>(y) * Chunk::chunkSize, 0);
 	auto chunkBehaviour = std::make_unique<ChunkRenderBehaviour>(m_map.getChunk(x, y), m_map, *this, x, y, m_definition);
 
 	//draw ground layer
@@ -160,7 +161,8 @@ void WorldRenderBehaviour2::addChunk(int x, int y)
 	entity2->AddComponent<Ndk::GraphicsComponent>();
 	auto & behaviour2 = entity2->AddComponent<BehaviourComponent>();
 	node2.SetParent(getEntity()->GetComponent<Ndk::NodeComponent>());
-	node2.SetPosition(static_cast<float>(x) * Chunk::chunkSize, static_cast<float>(y) * Chunk::chunkSize, static_cast<float>(y) * Chunk::chunkSize);
+	node2.SetPosition(static_cast<float>(x) * Chunk::chunkSize, static_cast<float>(y) * Chunk::chunkSize, 0);
+	auto & debug = entity2->AddComponent<Ndk::DebugComponent>(Ndk::DebugDraw::GraphicsAABB);
 	auto chunkBehaviour2 = std::make_unique<ChunkGroundRenderBehaviour>(m_map.getChunk(x, y), m_map, *this, x, y, m_definition);
 
 	m_chunks.push_back(ChunkInfo{ entity, chunkBehaviour.get(), entity2, chunkBehaviour2.get(), x, y });
@@ -173,6 +175,7 @@ void WorldRenderBehaviour2::removeChunk(size_t index)
 {
 	auto & c = m_chunks[index];
 	c.entity->Kill();
+	c.groundEntity->Kill();
 	m_chunks.erase(m_chunks.begin() + index);
 }
 

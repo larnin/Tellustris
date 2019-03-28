@@ -7,14 +7,14 @@ TileConnexionType localMatrixToTileConnexionType(const FixedMatrix<bool, 3, 3> &
 {
 	assert(mat(1, 1));
 
-	bool l = !mat(0, 1);
-	bool r = !mat(2, 1);
-	bool t = !mat(1, 0);
-	bool d = !mat(1, 2);
-	bool tl = !mat(0, 0);
-	bool tr = !mat(2, 0);
-	bool dl = !mat(0, 2);
-	bool dr = !mat(2, 2);
+	bool l = mat(0, 1);
+	bool r = mat(2, 1);
+	bool t = mat(1, 0);
+	bool d = mat(1, 2);
+	bool tl = mat(0, 0);
+	bool tr = mat(2, 0);
+	bool dl = mat(0, 2);
+	bool dr = mat(2, 2);
 
 	//full
 	if (!l && !r && !t && !d)
@@ -35,13 +35,13 @@ TileConnexionType localMatrixToTileConnexionType(const FixedMatrix<bool, 3, 3> &
 		return TileConnexionType::Horizontal;
 	//corner with corner
 	else if (!l && !t && !dr)
-		return TileConnexionType::TopLeftWithCorner;
-	else if (!l && !d && !tr)
-		return TileConnexionType::DownLeftWithCorner;
-	else if (!r && !t && !dl)
-		return TileConnexionType::TopRightWithCorner;
-	else if (!r && !d && !tl)
 		return TileConnexionType::DownRightWithCorner;
+	else if (!l && !d && !tr)
+		return TileConnexionType::TopRightWithCorner;
+	else if (!r && !t && !dl)
+		return TileConnexionType::DownLeftWithCorner;
+	else if (!r && !d && !tl)
+		return TileConnexionType::TopLeftWithCorner;
 	//corner without corner
 	else if (!l && !t)
 		return TileConnexionType::TopLeft;
