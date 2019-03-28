@@ -138,12 +138,10 @@
     <ClCompile Include="..\Src\GameData\Behaviours\ChunkRenderBehaviour.cpp" />
     <ClCompile Include="..\Src\GameData\Behaviours\ViewUpdaterBehaviour.cpp" />
     <ClCompile Include="..\Src\GameData\Behaviours\WorldRenderBehaviour.cpp" />
-    <ClCompile Include="..\Src\GameData\Behaviours\WorldRenderBehaviour2.cpp" />
     <ClCompile Include="..\Src\GameData\Chunk.cpp" />
     <ClCompile Include="..\Src\GameData\LoadRessources.cpp" />
     <ClCompile Include="..\Src\GameData\TileConnexionType.cpp" />
     <ClCompile Include="..\Src\GameData\TileDefinition.cpp" />
-    <ClCompile Include="..\Src\GameData\TileRenderDefinition.cpp" />
     <ClCompile Include="..\Src\GameData\WorldMap.cpp" />
     <ClCompile Include="..\Src\InitSystemsAndComponents.cpp" />
     <ClCompile Include="..\Src\main.cpp" />
@@ -169,12 +167,10 @@
     <ClInclude Include="..\Include\GameData\Behaviours\ChunkRenderBehaviour.h" />
     <ClInclude Include="..\Include\GameData\Behaviours\ViewUpdaterBehaviour.h" />
     <ClInclude Include="..\Include\GameData\Behaviours\WorldRenderBehaviour.h" />
-    <ClInclude Include="..\Include\GameData\Behaviours\WorldRenderBehaviour2.h" />
     <ClInclude Include="..\Include\GameData\Chunk.h" />
     <ClInclude Include="..\Include\GameData\LoadRessources.h" />
     <ClInclude Include="..\Include\GameData\TileConnexionType.h" />
     <ClInclude Include="..\Include\GameData\TileDefinition.h" />
-    <ClInclude Include="..\Include\GameData\TileRenderDefinition.h" />
     <ClInclude Include="..\Include\GameData\WorldMap.h" />
     <ClInclude Include="..\Include\InitSystemsAndComponents.h" />
     <ClInclude Include="..\Include\Systems\AnimatorSystem.h" />

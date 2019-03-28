@@ -11,7 +11,7 @@
 
 #include <vector>
 
-class WorldRenderBehaviour2;
+class WorldRenderBehaviour;
 
 class ChunkGroundRenderBehaviour : public Behaviour
 {
@@ -23,7 +23,7 @@ class ChunkGroundRenderBehaviour : public Behaviour
 	};
 
 public:
-	ChunkGroundRenderBehaviour(Chunk & chunk, WorldMap & map, WorldRenderBehaviour2 & worldRender, int chunkX, int chunkY, TileDefinitionRef definition);
+	ChunkGroundRenderBehaviour(Chunk & chunk, WorldMap & map, WorldRenderBehaviour & worldRender, int chunkX, int chunkY, TileDefinitionRef definition);
 
 	BehaviourRef clone() const override;
 
@@ -51,7 +51,7 @@ private:
 
 	Chunk & m_chunk;
 	WorldMap & m_map;
-	WorldRenderBehaviour2 & m_worldRender;
+	WorldRenderBehaviour & m_worldRender;
 	int m_chunkX;
 	int m_chunkY;
 	TileDefinitionRef m_definition;

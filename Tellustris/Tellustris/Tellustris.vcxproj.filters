@@ -123,9 +123,6 @@
     <ClCompile Include="..\Src\GameData\Behaviours\ViewUpdaterBehaviour.cpp">
       <Filter>Fichiers sources\GameData\Behaviours</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\GameData\Behaviours\WorldRenderBehaviour.cpp">
-      <Filter>Fichiers sources\GameData\Behaviours</Filter>
-    </ClCompile>
     <ClCompile Include="..\Src\GameData\LoadRessources.cpp">
       <Filter>Fichiers sources\GameData</Filter>
     </ClCompile>
@@ -138,16 +135,13 @@
     <ClCompile Include="..\Src\GameData\TileDefinition.cpp">
       <Filter>Fichiers sources\GameData</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\GameData\Behaviours\WorldRenderBehaviour2.cpp">
-      <Filter>Fichiers sources\GameData\Behaviours</Filter>
-    </ClCompile>
     <ClCompile Include="..\Src\GameData\Behaviours\ChunkRenderBehaviour.cpp">
       <Filter>Fichiers sources\GameData\Behaviours</Filter>
     </ClCompile>
-    <ClCompile Include="..\Src\GameData\TileRenderDefinition.cpp">
-      <Filter>Fichiers sources\GameData</Filter>
-    </ClCompile>
     <ClCompile Include="..\Src\GameData\Behaviours\ChunkGroundRenderBehaviour.cpp">
+      <Filter>Fichiers sources\GameData\Behaviours</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\GameData\Behaviours\WorldRenderBehaviour.cpp">
       <Filter>Fichiers sources\GameData\Behaviours</Filter>
     </ClCompile>
   </ItemGroup>
@@ -236,9 +230,6 @@
     <ClInclude Include="..\Include\Utility\Event\Args.h">
       <Filter>Fichiers d%27en-tête\Utility\Event</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\GameData\Behaviours\WorldRenderBehaviour.h">
-      <Filter>Fichiers d%27en-tête\GameData\Behaviours</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\Utility\FixedMatrix.h">
       <Filter>Fichiers d%27en-tête\Utility</Filter>
     </ClInclude>
@@ -263,14 +254,8 @@
     <ClInclude Include="..\Include\GameData\TileDefinition.h">
       <Filter>Fichiers d%27en-tête\GameData</Filter>
     </ClInclude>
-    <ClInclude Include="..\Include\GameData\Behaviours\WorldRenderBehaviour2.h">
-      <Filter>Fichiers d%27en-tête\GameData\Behaviours</Filter>
-    </ClInclude>
     <ClInclude Include="..\Include\GameData\Behaviours\ChunkRenderBehaviour.h">
       <Filter>Fichiers d%27en-tête\GameData\Behaviours</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Include\GameData\TileRenderDefinition.h">
-      <Filter>Fichiers d%27en-tête\GameData</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\GameData\Behaviours\ChunkGroundRenderBehaviour.h">
       <Filter>Fichiers d%27en-tête\GameData\Behaviours</Filter>
@@ -280,6 +265,9 @@
     </ClInclude>
     <ClInclude Include="..\Include\Utility\enumclasshash.h">
       <Filter>Fichiers d%27en-tête\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\GameData\Behaviours\WorldRenderBehaviour.h">
+      <Filter>Fichiers d%27en-tête\GameData\Behaviours</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

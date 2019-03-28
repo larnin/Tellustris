@@ -1,14 +1,14 @@
 
 #include "GameData/Behaviours/ChunkGroundRenderBehaviour.h"
 #include "Utility/Ressource.h"
-#include "GameData/Behaviours/WorldRenderBehaviour2.h"
+#include "GameData/Behaviours/WorldRenderBehaviour.h"
 #include "Utility/StaticRandomGenerator.h"
 
 #include <NDK/Components/GraphicsComponent.hpp>
 
 #include <cassert>
 
-ChunkGroundRenderBehaviour::ChunkGroundRenderBehaviour(Chunk & chunk, WorldMap & map, WorldRenderBehaviour2 & worldRender, int chunkX, int chunkY, TileDefinitionRef definition)
+ChunkGroundRenderBehaviour::ChunkGroundRenderBehaviour(Chunk & chunk, WorldMap & map, WorldRenderBehaviour & worldRender, int chunkX, int chunkY, TileDefinitionRef definition)
 	: m_chunk(chunk)
 	, m_map(map)
 	, m_worldRender(worldRender)

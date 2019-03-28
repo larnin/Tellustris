@@ -1,53 +1,56 @@
 #pragma once
 
-#include "GameData/WorldMap.h"
 #include "Behaviour.h"
-#include "GameData/WorldMap.h"
 #include "Utility/Event/Event.h"
 #include "Utility/Event/Args.h"
-#include "Tilemap/Tilemap.h"
-#include "GameData/TileRenderDefinition.h"
+#include "GameData/TileDefinition.h"
+#include "GameData/WorldMap.h"
 
 #include <NDK/Entity.hpp>
 
 #include <vector>
 
+class ChunkRenderBehaviour;
+class ChunkGroundRenderBehaviour;
+
 class WorldRenderBehaviour : public Behaviour
 {
-	struct ChunkLayerInfo
-	{
-		ChunkLayerInfo(const ChunkLayerInfo &) = delete;
-		ChunkLayerInfo & operator=(const ChunkLayerInfo &) = delete;
-		ChunkLayerInfo(ChunkLayerInfo &&) noexcept = default;
-		ChunkLayerInfo & operator=(ChunkLayerInfo &&) noexcept = default;
-
-		TilemapRef tilemap;
-		Ndk::EntityHandle entity;
-		EventHolder<Tilemap::TilemapModified> mapModifiedHolder;
-	};
-
 	struct ChunkInfo
 	{
-		ChunkInfo(const ChunkInfo &) = delete;
-		ChunkInfo & operator=(const ChunkInfo &) = delete;
-		ChunkInfo(ChunkInfo &&) noexcept = default;
-		ChunkInfo & operator=(ChunkInfo &&) noexcept = default;
-
+		Ndk::EntityHandle entity;
+		ChunkRenderBehaviour * behaviour;
+		Ndk::EntityHandle groundEntity;
+		ChunkGroundRenderBehaviour * groundBehaviour;
 		int x;
 		int y;
-		Chunk * chunk;
+	};
 
-		std::vector<ChunkLayerInfo> layers;
-		EventHolder<Chunk::LayerChanged> layerModifierHolder;
+	class ChunkBorder
+	{
+	public:
+		ChunkBorder(Chunk & chunk, WorldRenderBehaviour & render, int chunkX, int chunkY);
+		ChunkBorder(const ChunkBorder & border);
+
+	private:
+		void onLayerChange(size_t layer, Chunk::LayerChanged::ChangeState state);
+		void onMapChange(size_t layer, size_t x, size_t y);
+		void onLayerAdd(size_t layer);
+		void onLayerRemove(size_t layer);
+
+		Chunk & m_chunk;
+		WorldRenderBehaviour & m_worldRender;
+		int m_chunkX;
+		int m_chunkY;
+
+		EventHolder<Chunk::LayerChanged> m_layerChangedHolder;
+		std::vector<EventHolder<Tilemap::TilemapModified>> m_mapModified;
 	};
 
 public:
-	WorldRenderBehaviour(WorldMap & map, float viewSize);
-
+	WorldRenderBehaviour(WorldMap & map, TileDefinitionRef definition, float viewSize);
 	BehaviourRef clone() const override;
 
-	void setDefaultTileDef(TileRenderDefinitionRef def);
-	void setTileDef(TileRenderDefinitionRef def, size_t layer);
+	void onBoderBlockUpdate(size_t chunkX, size_t chunkY, size_t x, size_t y, size_t layer);
 
 protected:
 	void onEnable() override;
@@ -55,26 +58,14 @@ protected:
 
 private:
 	void onCenterViewUpdate(float x, float y);
-	void onLayerUpdate(int chunkX, int chunkY, size_t layer, Chunk::LayerChanged::ChangeState state);
-	void onTileUpdate(int chunkX, int chunkY, size_t layer, size_t x, size_t y);
+	void addChunk(int x, int y);
+	void removeChunk(size_t index); 
+	std::vector<Nz::Vector2i> getViewChunks(float x, float y) const;
 
-	std::vector<Nz::Vector2i> getViewChunks(float x, float y);
-	void addNewChunk(int x, int y);
-	void removeChunk(size_t index);
-	void addNewLayer(int x, int y, size_t layer);
-	void removeLayer(int x, int y, size_t layer);
-	void updateLayerHeight(int x, int y, size_t layer);
-
-	void drawLayer(TilemapRef map, int x, int y, size_t layer);
-	void drawTile(TilemapRef map, int mapX, int mapY, int x, int y, size_t layer);
-
+	EventHolder<CenterViewUpdate> m_CenterViewUpdateHolder;
+	TileDefinitionRef m_definition;
 	WorldMap & m_map;
 	float m_viewSize;
 
-	EventHolder<CenterViewUpdate> m_CenterViewUpdateHolder;
-	
-	std::vector<ChunkInfo> m_chunkInfos;
-
-	std::vector<TileRenderDefinitionRef> m_tilesDef;
-	TileRenderDefinitionRef m_defaultTileDef;
+	std::vector<ChunkInfo> m_chunks;
 };

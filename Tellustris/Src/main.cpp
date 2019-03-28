@@ -12,7 +12,6 @@
 #include "GameData/Behaviours/ViewUpdaterBehaviour.h"
 #include "GameData/WorldMap.h"
 #include "GameData/Behaviours/WorldRenderBehaviour.h"
-#include "GameData/Behaviours/WorldRenderBehaviour2.h"
 #include "GameData/LoadRessources.h"
 #include "Utility/Perlin.h"
 #include "Utility/enumiterators.h"
@@ -281,96 +280,6 @@
 //int main()
 //{
 //	Ndk::Application application;
-//	
-//	InitializeSystemsAndComponents();
-//	RessourceLoader::loadAll("./Data/");
-//	
-//	Nz::TextureSampler::SetDefaultFilterMode(Nz::SamplerFilter::SamplerFilter_Nearest);
-//	
-//	Nz::RenderWindow& mainWindow = application.AddWindow<Nz::RenderWindow>();
-//	mainWindow.Create(Nz::VideoMode(800, 600, 32), "Test");
-//	mainWindow.SetFramerateLimit(60);
-//	
-//	WindowEventsHolder windowEventsHolder(mainWindow.GetEventHandler());
-//	
-//	Ndk::World& world = application.AddWorld();
-//	world.AddSystem<AnimatorSystem>();
-//	world.AddSystem<TilemapAnimationsSystem>();
-//	world.AddSystem<BehaviourSystem>();
-//	world.GetSystem<Ndk::RenderSystem>().SetGlobalUp(Nz::Vector3f::Down());
-//
-//	Ndk::EntityHandle player = world.CreateEntity();
-//	{
-//		auto mat = Nz::Material::New("Translucent3D");
-//		mat->EnableDepthSorting(true);
-//		//mat->EnableDepthWrite(true);
-//		auto sprite = Nz::Sprite::New(mat);
-//		sprite->SetTexture(Ressource<Nz::Texture>::get("Img/square.png"));
-//		sprite->SetSize(1, 1);
-//		auto & node = player->AddComponent<Ndk::NodeComponent>();
-//		node.SetPosition(0, 0, 1);
-//		auto & graph = player->AddComponent<Ndk::GraphicsComponent>();
-//		graph.Attach(sprite);
-//		auto & behaviour = player->AddComponent<BehaviourComponent>();
-//		behaviour.attach(std::make_unique<ViewUpdaterBehaviour>());
-//	}
-//
-//	Ndk::EntityHandle camera = world.CreateEntity();
-//	{
-//		auto & node = camera->AddComponent<Ndk::NodeComponent>();
-//		node.SetParent(player->GetComponent<Ndk::NodeComponent>());
-//		node.SetPosition(-(mainWindow.GetSize().x / 32.f), -(mainWindow.GetSize().y / 32.f), 10);
-//		Ndk::CameraComponent& viewer = camera->AddComponent<Ndk::CameraComponent>();
-//		viewer.SetTarget(&mainWindow);
-//		viewer.SetProjectionType(Nz::ProjectionType_Orthogonal);
-//		viewer.SetSize(mainWindow.GetSize().x / 16.f, mainWindow.GetSize().y / 16.f);
-//	}
-//		
-//	WorldMap map(2, 2);
-//	Ndk::EntityHandle mapEntity = world.CreateEntity();
-//	{
-//		for(unsigned int i = 0 ; i < 2 ; i++)
-//			for (unsigned int j = 0; j < 2; j++)
-//			{
-//				auto & c = map.getChunk(i, j);
-//				for(unsigned int x = 0 ; x < Chunk::chunkSize ; x++)
-//					for (unsigned int y = 0; y < Chunk::chunkSize; y++)
-//						c.setTile(x, y, Tile{ i + j * 2 + 1,{} }, 0);
-//			}
-//
-//		Ressource<Tilemap>::add("test", map.getChunk(0, 0).getMap(0));
-//
-//		mapEntity->AddComponent<Ndk::NodeComponent>();
-//		auto & behaviour = mapEntity->AddComponent<BehaviourComponent>();
-//		behaviour.attach(std::make_unique<WorldRenderBehaviour>(map, 20.f));
-//	}
-//
-//	auto & playerNode = player->GetComponent<Ndk::NodeComponent>();
-//	while (application.Run())
-//	{
-//		const float speed = 15.f;
-//		Nz::Vector2f dir(Nz::Keyboard::IsKeyPressed(Nz::Keyboard::Right) - Nz::Keyboard::IsKeyPressed(Nz::Keyboard::Left)
-//			, Nz::Keyboard::IsKeyPressed(Nz::Keyboard::Down) - Nz::Keyboard::IsKeyPressed(Nz::Keyboard::Up));
-//		if (dir.GetSquaredLength() > 0.1f)
-//			dir.Normalize();
-//		dir *= speed * application.GetUpdateTime();
-//			
-//		auto pos = playerNode.GetPosition();
-//		pos.x += dir.x;
-//		pos.y += dir.y;
-//		playerNode.SetPosition(pos);
-//			
-//		mainWindow.Display();
-//	}
-//
-//	RessourceLoader::unloadAll();
-//			
-//	return EXIT_SUCCESS;
-//}
-
-//int main()
-//{
-//	Ndk::Application application;
 //		
 //	InitializeSystemsAndComponents();
 //
@@ -512,7 +421,7 @@ int main()
 
 		mapEntity->AddComponent<Ndk::NodeComponent>();
 		auto & behaviour = mapEntity->AddComponent<BehaviourComponent>();
-		behaviour.attach(std::make_unique<WorldRenderBehaviour2>(map, def, 25.0f));
+		behaviour.attach(std::make_unique<WorldRenderBehaviour>(map, def, 25.0f));
 	}
 
 
