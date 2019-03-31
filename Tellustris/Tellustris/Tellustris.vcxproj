@@ -134,6 +134,7 @@
     <ClCompile Include="..\Src\Components\TilemapAnimationComponent.cpp" />
     <ClCompile Include="..\Src\Components\TilemapColliderComponent.cpp" />
     <ClCompile Include="..\Src\Components\TilemapComponent.cpp" />
+    <ClCompile Include="..\Src\GameData\Behaviours\ChunkCollisionBehaviour.cpp" />
     <ClCompile Include="..\Src\GameData\Behaviours\ChunkGroundRenderBehaviour.cpp" />
     <ClCompile Include="..\Src\GameData\Behaviours\ChunkRenderBehaviour.cpp" />
     <ClCompile Include="..\Src\GameData\Behaviours\ViewUpdaterBehaviour.cpp" />
@@ -163,6 +164,7 @@
     <ClInclude Include="..\Include\Components\TilemapColliderComponent.h" />
     <ClInclude Include="..\Include\Components\TilemapComponent.h" />
     <ClInclude Include="..\Include\GameData\Behaviours\Behaviour.h" />
+    <ClInclude Include="..\Include\GameData\Behaviours\ChunkCollisionBehaviour.h" />
     <ClInclude Include="..\Include\GameData\Behaviours\ChunkGroundRenderBehaviour.h" />
     <ClInclude Include="..\Include\GameData\Behaviours\ChunkRenderBehaviour.h" />
     <ClInclude Include="..\Include\GameData\Behaviours\ViewUpdaterBehaviour.h" />

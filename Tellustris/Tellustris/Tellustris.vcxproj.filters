@@ -144,6 +144,9 @@
     <ClCompile Include="..\Src\GameData\Behaviours\WorldRenderBehaviour.cpp">
       <Filter>Fichiers sources\GameData\Behaviours</Filter>
     </ClCompile>
+    <ClCompile Include="..\Src\GameData\Behaviours\ChunkCollisionBehaviour.cpp">
+      <Filter>Fichiers sources\GameData\Behaviours</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Systems\AnimatorSystem.h">
@@ -267,6 +270,9 @@
       <Filter>Fichiers d%27en-tête\Utility</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\GameData\Behaviours\WorldRenderBehaviour.h">
+      <Filter>Fichiers d%27en-tête\GameData\Behaviours</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\GameData\Behaviours\ChunkCollisionBehaviour.h">
       <Filter>Fichiers d%27en-tête\GameData\Behaviours</Filter>
     </ClInclude>
   </ItemGroup>
