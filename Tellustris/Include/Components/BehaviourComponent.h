@@ -1,6 +1,7 @@
 #pragma once
 
 #include "GameData/Behaviours/Behaviour.h"
+#include "GameData/ContactArbiter2D.h"
 
 #include <NDK/Component.hpp>
 
@@ -19,6 +20,11 @@ public:
 	void detachAll();
 
 	void update(float elapsedTime);
+
+	void onContactStart(ContactArbiter2D & arbiter, const Ndk::EntityHandle & otherBody);
+	void onContactEnd(ContactArbiter2D & arbiter, const Ndk::EntityHandle & otherBody);
+	void onContactPreSolve(ContactArbiter2D & arbiter, const Ndk::EntityHandle & otherBody);
+	void onContactPostSolve(ContactArbiter2D & arbiter, const Ndk::EntityHandle & otherBody);
 
 	static Ndk::ComponentIndex componentIndex;
 private:

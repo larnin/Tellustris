@@ -1,5 +1,7 @@
 #pragma once
 
+#include "GameData/ContactArbiter2D.h"
+
 #include <NDK/Entity.hpp>
 
 #include <memory>
@@ -30,6 +32,11 @@ protected:
 
 	virtual void OnEntityComponentAttached(Ndk::BaseComponent& component) {}
 	virtual void OnEntityComponentDetached(Ndk::BaseComponent& component) {}
+
+	virtual void onContactStart(ContactArbiter2D & arbiter, const Ndk::EntityHandle & otherBody) {}
+	virtual void onContactEnd(ContactArbiter2D & arbiter, const Ndk::EntityHandle & otherBody) {}
+	virtual void onContactPreSolve(ContactArbiter2D & arbiter, const Ndk::EntityHandle & otherBody) {}
+	virtual void onContactPostSolve(ContactArbiter2D & arbiter, const Ndk::EntityHandle & otherBody) {}
 
 private:
 	Ndk::EntityHandle m_entity;

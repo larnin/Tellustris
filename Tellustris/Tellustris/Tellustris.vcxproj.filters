@@ -275,6 +275,9 @@
     <ClInclude Include="..\Include\GameData\Behaviours\ChunkCollisionBehaviour.h">
       <Filter>Fichiers d%27en-tête\GameData\Behaviours</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\GameData\ContactArbiter2D.h">
+      <Filter>Fichiers d%27en-tête\GameData</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Include\Utility\Expression\ExpressionParser.inl">

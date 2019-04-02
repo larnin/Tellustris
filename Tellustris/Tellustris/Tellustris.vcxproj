@@ -170,6 +170,7 @@
     <ClInclude Include="..\Include\GameData\Behaviours\ViewUpdaterBehaviour.h" />
     <ClInclude Include="..\Include\GameData\Behaviours\WorldRenderBehaviour.h" />
     <ClInclude Include="..\Include\GameData\Chunk.h" />
+    <ClInclude Include="..\Include\GameData\ContactArbiter2D.h" />
     <ClInclude Include="..\Include\GameData\LoadRessources.h" />
     <ClInclude Include="..\Include\GameData\TileConnexionType.h" />
     <ClInclude Include="..\Include\GameData\TileDefinition.h" />

@@ -151,3 +151,27 @@ void BehaviourComponent::OnEntityEnabled()
 	for (auto & b : m_behaviours)
 		b->onEnable();
 }
+
+void BehaviourComponent::onContactStart(ContactArbiter2D & arbiter, const Ndk::EntityHandle & otherBody)
+{
+	for (auto & b : m_behaviours)
+		b->onContactStart(arbiter, otherBody);
+}
+
+void BehaviourComponent::onContactEnd(ContactArbiter2D & arbiter, const Ndk::EntityHandle & otherBody)
+{
+	for (auto & b : m_behaviours)
+		b->onContactEnd(arbiter, otherBody);
+}
+
+void BehaviourComponent::onContactPreSolve(ContactArbiter2D & arbiter, const Ndk::EntityHandle & otherBody)
+{
+	for (auto & b : m_behaviours)
+		b->onContactPreSolve(arbiter, otherBody);
+}
+
+void BehaviourComponent::onContactPostSolve(ContactArbiter2D & arbiter, const Ndk::EntityHandle & otherBody)
+{
+	for (auto & b : m_behaviours)
+		b->onContactPostSolve(arbiter, otherBody);
+}
