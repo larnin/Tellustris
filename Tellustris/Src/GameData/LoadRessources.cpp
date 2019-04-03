@@ -200,7 +200,7 @@ bool RessourceLoader::loadTilemap(const std::string & path, const std::string & 
 
 	auto tilemap = Tilemap::New(sizeX, sizeY, tileSize, tileDelta);
 
-	auto tiles = j["tiles"];
+	const auto & tiles = j["tiles"];
 	assert(tiles.is_array() && tiles.size() == sizeX * sizeY);
 
 	for (unsigned int i(0); i < sizeX; i++)
@@ -215,7 +215,6 @@ bool RessourceLoader::loadTilemap(const std::string & path, const std::string & 
 
 	return true;
 }
-
 
 void RessourceLoader::initializeMaterials()
 {

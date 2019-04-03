@@ -13,6 +13,7 @@
 #include "GameData/WorldMap.h"
 #include "GameData/Behaviours/WorldRenderBehaviour.h"
 #include "GameData/LoadRessources.h"
+#include "GameData/LoadSettings.h"
 #include "Utility/Perlin.h"
 #include "Utility/enumiterators.h"
 
@@ -325,6 +326,7 @@ int main()
 
 	InitializeSystemsAndComponents();
 	RessourceLoader::loadAll("./Data/");
+	SettingsLoader::loadAll("./Data/");
 
 	Nz::TextureSampler::SetDefaultFilterMode(Nz::SamplerFilter::SamplerFilter_Nearest);
 
@@ -451,6 +453,6 @@ int main()
 		mainWindow.Display();
 	}
 
+	SettingsLoader::unloadAll();
 	RessourceLoader::unloadAll();
-
 }

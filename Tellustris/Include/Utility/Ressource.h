@@ -54,6 +54,8 @@ public:
 	}
 
 private:
+	Ressource() = delete;
+
 	static std::unordered_map<std::string, Nz::ObjectRef<T>> m_ressources;
 };
 

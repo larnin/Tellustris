@@ -4,6 +4,7 @@
 
 enum class ContactType
 {
+	None,
 	Collision,
 	Trigger
 };

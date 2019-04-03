@@ -147,6 +147,12 @@
     <ClCompile Include="..\Src\GameData\Behaviours\ChunkCollisionBehaviour.cpp">
       <Filter>Fichiers sources\GameData\Behaviours</Filter>
     </ClCompile>
+    <ClCompile Include="..\Src\GameData\LoadSettings.cpp">
+      <Filter>Fichiers sources\GameData</Filter>
+    </ClCompile>
+    <ClCompile Include="..\Src\GameData\CollisionDefinition.cpp">
+      <Filter>Fichiers sources\GameData</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Systems\AnimatorSystem.h">
@@ -276,6 +282,15 @@
       <Filter>Fichiers d%27en-tête\GameData\Behaviours</Filter>
     </ClInclude>
     <ClInclude Include="..\Include\GameData\ContactArbiter2D.h">
+      <Filter>Fichiers d%27en-tête\GameData</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\Utility\Settings.h">
+      <Filter>Fichiers d%27en-tête\Utility</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\GameData\LoadSettings.h">
+      <Filter>Fichiers d%27en-tête\GameData</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Include\GameData\CollisionDefinition.h">
       <Filter>Fichiers d%27en-tête\GameData</Filter>
     </ClInclude>
   </ItemGroup>

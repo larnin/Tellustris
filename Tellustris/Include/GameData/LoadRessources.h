@@ -12,7 +12,6 @@ class RessourceLoader
 		std::string animation;
 	};
 
-
 public:
 	static void loadAll(const std::string & path);
 	static void unloadAll();
