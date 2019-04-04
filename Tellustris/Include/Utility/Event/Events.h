@@ -6,11 +6,7 @@
 
 using Id = size_t;
 
-inline Id nextId()
-{
-	static Id i = 0;
-	return i++;
-}
+Id nextId();
 
 template<class T>
 Id getId()
@@ -50,7 +46,7 @@ class EventsHolder
 {
 	friend Events;
 public:
-	EventsHolder();
+	EventsHolder() = default;
 	EventsHolder(const EventsHolder &) = delete;
 	EventsHolder(EventsHolder && e) noexcept;
 	EventsHolder & operator=(const EventsHolder &) = delete;

@@ -2,6 +2,12 @@
 #include "Utility/Event/Events.h"
 #include <iostream>
 
+Id nextId()
+{
+static Id i = 0;
+return i++;
+}
+
 EventsImpl::EventsImpl(const std::function<void(const void*)> & _function)
 	: function(_function)
 	, blocked(false)
@@ -9,14 +15,8 @@ EventsImpl::EventsImpl(const std::function<void(const void*)> & _function)
 
 }
 
-EventsHolder::EventsHolder()
-	: m_eventImpl(nullptr)
-{
-
-}
-
 EventsHolder::EventsHolder(std::shared_ptr<EventsImpl> e)
-	: m_eventImpl(e)
+	: m_eventImpl(std::move(e))
 {
 
 }

@@ -56,12 +56,6 @@ inline Event<T> & StaticEvent<T>::instance()
 }
 
 template<typename T>
-EventHolder<T>::EventHolder()
-	: m_eventImpl(nullptr)
-{
-}
-
-template<typename T>
 EventHolder<T>::EventHolder(EventHolder<T> && e) noexcept
 	: m_eventImpl(std::move(e.m_eventImpl))
 {

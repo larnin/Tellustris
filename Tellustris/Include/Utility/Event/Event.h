@@ -50,7 +50,7 @@ class EventHolder
 {
 	friend Event<T>;
 public:
-	EventHolder();
+	EventHolder() = default;
 	EventHolder(const EventHolder<T> &) = delete;
 	EventHolder(EventHolder<T> && e) noexcept;
 	EventHolder<T> & operator=(const EventHolder<T> &) = delete;
