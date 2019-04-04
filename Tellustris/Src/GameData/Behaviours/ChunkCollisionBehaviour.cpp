@@ -1,4 +1,6 @@
 #include "GameData/Behaviours/ChunkCollisionBehaviour.h"
+#include "Utility/Settings.h"
+#include "GameData/CollisionDefinition.h"
 
 #include <NDK/World.hpp>
 #include <NDK/Components/NodeComponent.hpp>
@@ -145,7 +147,18 @@ void ChunkCollisionBehaviour::createCollisionLayer(unsigned int collisionLayer)
 		}
 
 	auto & collision = entity->GetComponent<Ndk::CollisionComponent2D>();
-	collision.SetGeom(Nz::CompoundCollider2D::New(colliders));
+	auto collider = Nz::CompoundCollider2D::New(colliders);
+
+	auto def = Settings<CollisionDefinition>::value();
+	if (def->haveLayer(collisionLayer))
+	{
+		collider->SetCategoryMask(1 << collisionLayer);
+		collider->SetCollisionMask(def->collisionAndTriggerMask(collisionLayer));
+		collider->SetCollisionGroup(0);
+		collider->SetCollisionId(collisionLayer);
+	}
+
+	collision.SetGeom(collider);
 }
 
 Ndk::EntityHandle ChunkCollisionBehaviour::createEntity()
