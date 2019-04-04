@@ -30,7 +30,7 @@ public:
 	void send(const T & value);
 
 private:
-	std::vector<std::shared_ptr<EventImpl<T>>> m_events;
+	std::vector<std::weak_ptr<EventImpl<T>>> m_events;
 };
 
 template <typename T>

@@ -154,6 +154,7 @@
     <ClCompile Include="..\Src\Tilemap\Tile.cpp" />
     <ClCompile Include="..\Src\Tilemap\Tilemap.cpp" />
     <ClCompile Include="..\Src\Tilemap\TilemapAnimations.cpp" />
+    <ClCompile Include="..\Src\Utility\Event\Events.cpp" />
     <ClCompile Include="..\Src\Utility\Event\WindowEventsHolder.cpp" />
     <ClCompile Include="..\Src\Utility\Perlin.cpp" />
   </ItemGroup>
@@ -190,6 +191,7 @@
     <ClInclude Include="..\Include\Utility\enumiterators.h" />
     <ClInclude Include="..\Include\Utility\Event\Args.h" />
     <ClInclude Include="..\Include\Utility\Event\Event.h" />
+    <ClInclude Include="..\Include\Utility\Event\Events.h" />
     <ClInclude Include="..\Include\Utility\Event\WindowEventArgs.h" />
     <ClInclude Include="..\Include\Utility\Event\WindowEventsHolder.h" />
     <ClInclude Include="..\Include\Utility\Expression\Expression.h" />
@@ -209,6 +211,7 @@
     <None Include="..\Include\Utility\Event\Event.inl">
       <FileType>Document</FileType>
     </None>
+    <None Include="..\Include\Utility\Event\Events.inl" />
     <None Include="..\Include\Utility\Expression\ExpressionParser.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -17,8 +17,9 @@ EventImpl<T>::EventImpl(const std::function<void(const T &)> & _function)
 template<typename T>
 inline EventHolder<T> Event<T>::connect(const std::function<void(const T&)>& function)
 {
-	m_events.push_back(std::make_unique<EventImpl<T>>(function));
-	return EventHolder<T>(m_events.back());
+	auto func = std::make_shared<EventImpl<T>>(function);
+	m_events.push_back(func);
+	return EventHolder<T>(func);
 }
 
 template<typename T>
@@ -26,12 +27,13 @@ inline void Event<T>::send(const T & value)
 {
 	for (auto & e : m_events)
 	{
-		if (!e || e->blocked || !e->function)
+		auto eLock = e.lock();
+		if (!eLock || eLock->blocked || !eLock->function)
 			continue;
-		e->function(value);
+		eLock->function(value);
 	}
 
-	m_events.erase(std::remove_if(m_events.begin(), m_events.end(), [](const auto & v) {return !v; }), m_events.end());
+	m_events.erase(std::remove_if(m_events.begin(), m_events.end(), [](const auto & v) {return v.expired(); }), m_events.end());
 }
 
 template <typename T>
