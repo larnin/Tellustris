@@ -4,8 +4,8 @@
 
 Id nextId()
 {
-static Id i = 0;
-return i++;
+	static Id i = 0;
+	return i++;
 }
 
 EventsImpl::EventsImpl(const std::function<void(const void*)> & _function)

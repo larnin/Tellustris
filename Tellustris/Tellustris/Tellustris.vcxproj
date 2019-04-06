@@ -141,6 +141,7 @@
     <ClCompile Include="..\Src\GameData\Behaviours\WorldRenderBehaviour.cpp" />
     <ClCompile Include="..\Src\GameData\Chunk.cpp" />
     <ClCompile Include="..\Src\GameData\CollisionDefinition.cpp" />
+    <ClCompile Include="..\Src\GameData\EntityTools.cpp" />
     <ClCompile Include="..\Src\GameData\LoadRessources.cpp" />
     <ClCompile Include="..\Src\GameData\LoadSettings.cpp" />
     <ClCompile Include="..\Src\GameData\TileConnexionType.cpp" />
@@ -175,6 +176,7 @@
     <ClInclude Include="..\Include\GameData\Chunk.h" />
     <ClInclude Include="..\Include\GameData\CollisionDefinition.h" />
     <ClInclude Include="..\Include\GameData\ContactArbiter2D.h" />
+    <ClInclude Include="..\Include\GameData\EntityTools.h" />
     <ClInclude Include="..\Include\GameData\LoadRessources.h" />
     <ClInclude Include="..\Include\GameData\LoadSettings.h" />
     <ClInclude Include="..\Include\GameData\TileConnexionType.h" />
@@ -208,6 +210,7 @@
     <ClInclude Include="..\Include\Utility\StringOperation.h" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\Include\GameData\EntityTools.inl" />
     <None Include="..\Include\Utility\Event\Event.inl">
       <FileType>Document</FileType>
     </None>

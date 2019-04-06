@@ -2,6 +2,7 @@
 
 #include "GameData/Behaviours/Behaviour.h"
 #include "GameData/ContactArbiter2D.h"
+#include "Utility/Event/Events.h"
 
 #include <NDK/Component.hpp>
 
@@ -26,6 +27,18 @@ public:
 	void onContactPreSolve(ContactArbiter2D & arbiter, const Ndk::EntityHandle & otherBody);
 	void onContactPostSolve(ContactArbiter2D & arbiter, const Ndk::EntityHandle & otherBody);
 
+	template <typename T>
+	EventsHolder connect(std::function<void(const T &)> func)
+	{
+		return m_events.connect(func);
+	}
+
+	template <typename T>
+	void send(const T & value)
+	{
+		m_events.send(value);
+	}
+
 	static Ndk::ComponentIndex componentIndex;
 private:
 	void OnAttached() override;
@@ -39,4 +52,6 @@ private:
 	bool m_haveEntity = false;
 
 	std::vector<BehaviourRef> m_behaviours;
+
+	Events m_events;
 };

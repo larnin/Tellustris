@@ -1,10 +1,12 @@
 #pragma once
 
 #include "GameData/ContactArbiter2D.h"
+#include "Utility/Event/Events.h"
 
 #include <NDK/Entity.hpp>
 
 #include <memory>
+#include <functional>
 
 class Behaviour;
 using BehaviourRef = std::unique_ptr<Behaviour>;
@@ -37,6 +39,16 @@ protected:
 	virtual void onContactEnd(ContactArbiter2D & arbiter, const Ndk::EntityHandle & otherBody) {}
 	virtual void onContactPreSolve(ContactArbiter2D & arbiter, const Ndk::EntityHandle & otherBody) {}
 	virtual void onContactPostSolve(ContactArbiter2D & arbiter, const Ndk::EntityHandle & otherBody) {}
+
+	template <typename T>
+	EventsHolder foo(std::function<void(const T &)> func)
+	{
+		if (!haveEntity())
+			return { };
+		
+		auto & comp = getEntity()->GetComponent<BehaviourComponent>();
+		return comp.connect(func);
+	}
 
 private:
 	Ndk::EntityHandle m_entity;

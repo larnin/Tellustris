@@ -156,6 +156,9 @@
     <ClCompile Include="..\Src\Utility\Event\Events.cpp">
       <Filter>Fichiers sources\Utility\Event</Filter>
     </ClCompile>
+    <ClCompile Include="..\Src\GameData\EntityTools.cpp">
+      <Filter>Fichiers sources\GameData</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\Include\Systems\AnimatorSystem.h">
@@ -299,6 +302,9 @@
     <ClInclude Include="..\Include\Utility\Event\Events.h">
       <Filter>Fichiers d%27en-tête\Utility\Event</Filter>
     </ClInclude>
+    <ClInclude Include="..\Include\GameData\EntityTools.h">
+      <Filter>Fichiers d%27en-tête\GameData</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Include\Utility\Expression\ExpressionParser.inl">
@@ -309,6 +315,9 @@
     </None>
     <None Include="..\Include\Utility\Event\Events.inl">
       <Filter>Fichiers d%27en-tête\Utility\Event</Filter>
+    </None>
+    <None Include="..\Include\GameData\EntityTools.inl">
+      <Filter>Fichiers d%27en-tête\GameData</Filter>
     </None>
   </ItemGroup>
 </Project>
