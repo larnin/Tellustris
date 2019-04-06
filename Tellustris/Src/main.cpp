@@ -326,7 +326,7 @@ int main()
 
 	InitializeSystemsAndComponents();
 	RessourceLoader::loadAll("./Data/");
-	SettingsLoader::loadAll("./Data/");
+	SettingsLoader::loadAll("./Settings/");
 
 	Nz::TextureSampler::SetDefaultFilterMode(Nz::SamplerFilter::SamplerFilter_Nearest);
 

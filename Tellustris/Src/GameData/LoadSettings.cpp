@@ -4,6 +4,7 @@
 #include "Utility/Ressource.h"
 #include "Utility/Json.h"
 #include "GameData/TileDefinition.h"
+#include "GameData/CollisionDefinition.h"
 #include "GameData/LoadRessources.h"
 
 #include <filesystem>
@@ -21,12 +22,15 @@ void SettingsLoader::loadAll(const std::string & path)
 void SettingsLoader::unloadAll()
 {
 	Settings<TileDefinition>::reset();
+	Settings<CollisionDefinition>::reset();
 }
 
 void SettingsLoader::loadDirectoryRessources(const std::string & basePath, const std::string & subPath)
 {
 	fs::path fullPath = basePath;
 	fullPath /= subPath;
+	if (!fs::exists(fullPath))
+		return;
 	for (auto & p : fs::directory_iterator(fullPath))
 	{
 		std::string str = p.path().u8string();
@@ -51,6 +55,8 @@ void SettingsLoader::loadFile(const std::string & path, const std::string & file
 
 	if (extension == "tdef")
 		loaded = loadTileDefinition(path, filename);
+	if (extension == "cdef")
+		loaded = loadCollisionDefinition(path, filename);
 
 	if (loaded)
 		std::cout << "Ressource " << filename << " loaded !" << std::endl;
@@ -125,6 +131,42 @@ bool SettingsLoader::loadTileDefinition(const std::string & path, const std::str
 	}
 
 	Settings<TileDefinition>::set(filename, def);
+
+	return true;
+}
+
+bool SettingsLoader::loadCollisionDefinition(const std::string & path, const std::string & filename)
+{
+	if (Settings<CollisionDefinition>::value().IsValid())
+		return false;
+
+	Json j(RessourceLoader::readFile(path));
+
+	assert(j.is_object());
+
+	auto def = CollisionDefinition::New();
+
+	const auto & layers = j["layers"];
+
+	assert(layers.is_array());
+	for (const auto & l : layers)
+		def->addLayer(l.get<std::string>());
+
+	auto layersSize = layers.size();
+
+	const auto & contacts = j["contacts"];
+	assert(contacts.is_array());
+	assert(contacts.size() == layersSize * layersSize);
+	for (size_t i = 0 ; i < layersSize; i++)
+	{
+		for (size_t j = 0; j < layersSize; j++)
+		{
+			auto contact = static_cast<ContactType>(contacts[i + j * layersSize].get<unsigned int>());
+			def->setCollision(i, j, contact);
+		}
+	}
+
+	Settings<CollisionDefinition>::set(filename, def);
 
 	return true;
 }

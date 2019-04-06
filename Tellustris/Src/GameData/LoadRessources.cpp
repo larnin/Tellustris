@@ -55,6 +55,8 @@ void RessourceLoader::loadDirectoryRessources(const std::string & basePath, cons
 {
 	fs::path fullPath = basePath;
 	fullPath /= subPath;
+	if (!fs::exists(fullPath))
+		return;
 	for (auto & p : fs::directory_iterator(fullPath))
 	{
 		std::string str = p.path().u8string();

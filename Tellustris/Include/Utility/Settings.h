@@ -19,6 +19,11 @@ public:
 		return m_value;
 	}
 
+	static std::string name()
+	{
+		return m_name;
+	}
+
 	static void reset()
 	{
 		set("", {});

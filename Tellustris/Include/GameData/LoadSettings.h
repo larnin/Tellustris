@@ -13,4 +13,5 @@ private:
 	static void loadFile(const std::string & path, const std::string & filename);
 
 	static bool loadTileDefinition(const std::string & path, const std::string & filename);
+	static bool loadCollisionDefinition(const std::string & path, const std::string & filename);
 };
